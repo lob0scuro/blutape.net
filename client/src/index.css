@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+
+:root {
+  --background: #2a2829;
+  --backgroundDark: #1e1e1e;
+  --inputBackground: #d9d9d9;
+  --bannerBackground: #262f4c;
+  --linkText: #6d7db2;
+  --textPrimary: #f9f9f9;
+  --textSecondary: #8999af;
+  --buttonPrimary: #040b22;
+  --buttonSecondary: #8999af;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: unset;
+  text-decoration: none;
+}
+
+body {
+  height: 100dvh;
+  width: 100vw;
+  font-family: "Inter", sans-serif;
+}
+
+#root {
+  border: 1px solid blue;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  border: 1px solid green;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+header img.header-logo {
+  width: 150px;
+  border: 1px solid yellow;
+}
+
+main {
+  flex: 1;
+}
