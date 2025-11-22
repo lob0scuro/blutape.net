@@ -28,29 +28,127 @@ body {
   height: 100dvh;
   width: 100vw;
   font-family: "Inter", sans-serif;
+  background-color: var(--buttonSecondary);
+  scroll-behavior: smooth;
 }
 
 #root {
-  border: 1px solid blue;
   height: 100%;
   width: 100%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
+  position: relative;
 }
 
 header {
-  border: 1px solid green;
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px var(--linkText);
+  position: relative;
+  position: sticky;
+  top: 0;
+  background-color: var(--textSecondary);
+  z-index: 1001;
 }
 
 header img.header-logo {
-  width: 150px;
-  border: 1px solid yellow;
+  width: 8rem;
+}
+
+header svg {
+  font-size: 1.8rem;
+  color: var(--bannerBackground);
+  margin: 24px 24px 0 0;
+}
+
+header div#nav-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background-color: var(--bannerBackground);
+  border-radius: 8px 0 0 8px;
+
+  position: absolute;
+  right: 0;
+  top: 8.2rem;
+
+  z-index: 1000;
+  transition: transform 0.3s ease-in;
+}
+header div#nav-links a {
+  font-size: 24px;
+  padding: 10px 10px 10px 24px;
+  color: var(--buttonSecondary);
+  border: 1px solid var(--buttonSecondary);
+  width: 100%;
+  text-align: end;
+  font-style: italic;
+}
+header div#nav-links a.active-link {
+  color: var(--textPrimary);
+  /* font-weight: 600; */
+  font-style: unset;
+}
+header div#nav-links a:first-child {
+  border-radius: 8px 0 0 0;
+}
+header div#nav-links a:last-child {
+  border-radius: 0 0 0 8px;
+}
+
+header div#nav-links.hidden {
+  transform: translateX(100%);
 }
 
 main {
   flex: 1;
+  padding: 1rem;
+  width: 100%;
+  max-width: 1200px;
+
+  height: auto;
+}
+
+footer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  background-color: var(--bannerBackground);
+  color: var(--textPrimary);
+}
+
+footer button#logout-button {
+  background-color: transparent;
+  box-shadow: unset;
+  color: var(--linkText);
+  margin-bottom: 12px;
+  border: none;
+  font-weight: 800;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+button {
+  background-color: var(--linkText);
+  color: var(--textPrimary);
+  box-shadow: -1px 1px 6px var(--background);
+}
+
+button:active {
+  box-shadow: unset;
+  background-color: var(--bannerBackground);
+  color: var(--linkText);
+}
+
+input,
+select,
+textarea {
+  color: var(--background) !important;
 }

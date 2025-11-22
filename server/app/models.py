@@ -7,6 +7,7 @@ TypeEnum = Enum("fridge", "washer", "dryer", "range", "microwave", "water_heater
 ConditionEnum = Enum("NEW", "USED", "Scratch and Dent", name="condition_enum")
 VendorEnum = Enum("pasadena", "baton_rouge", "alexandria", "stines_lc", "stines_jn", "scrappers", "viking", "unknown", name="vendor_enum")
 StatusEnum = Enum("completed", "trashed", "in_progress", "exported", "archived", name="status_enum")
+RoleEnum = Enum("office", "fridge_tech", "washer_tech", "dryer_range_tech", "inventory")
 
 
 
@@ -19,7 +20,7 @@ class Users(db.Model, UserMixin):
     id = Column(Integer, primary_key=True)
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
-    role = Column(Integer, nullable=False)
+    role = Column(RoleEnum, nullable=False)
     is_admin = Column(Boolean, default=False)
     email = Column(String(150), nullable=False, unique=True)
     password_hash = Column(String(255), nullable=False)

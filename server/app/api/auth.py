@@ -43,17 +43,15 @@ def register():
         return jsonify(success=False, message=f"Error when adding user: {e}"), 500
     
     
-@auth_bp.route("/login/<int:id>", methods=["POST"])
-def login(id):
-    id = int(id)
+@auth_bp.route("/login", methods=["POST"])
+def login():
     try:
-        user = Users.query.get(id)
-        if not user:
-            return jsonify(success=False, message="User not found. please check inputs and try again"), 400
         data = request.get_json()
+        email = data.get("email")
         password = data.get("password")
-        if not password:
-            return jsonify(success=False, message="Password field is required"), 400
+        user = Users.query.filter_by(email=email).first()
+        if not user:
+            return jsonify(success=False, message="Invalid credentials, please check inputs and try again."), 400
         if not bcrypt.check_password_hash(user.password_hash, password):
             return jsonify(success=False, message="Invalid credentials, please check your inputs and try again."), 401
         login_user(user)

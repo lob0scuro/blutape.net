@@ -31,3 +31,11 @@ export const TYPES = {
   stackable: "Stackable",
   dishwasher: "Dishwasher",
 };
+
+export const ROLES = {
+  office: "Office",
+  fridge_tech: "Fridge Tech",
+  washer_tech: "Washer Tech",
+  dryer_range_tech: "Dryer and Range Tech",
+  inventory: "Inventory",
+};

@@ -1,18 +1,74 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 import LOGO from "../assets/blutape-logo.svg";
+import { useAuth } from "../context/AuthContext";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
 
 const RootLayout = () => {
+  const { user, setUser } = useAuth();
+  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
+
+  const logout = async () => {
+    if (!confirm("Logout?")) return;
+
+    const response = await fetch("/api/auth/logout");
+    const data = await response.json();
+    toast.success(data.message);
+    setUser(null);
+  };
   return (
     <>
       <header>
-        <img src={LOGO} alt="bluTape logo" className="header-logo" />
+        <Link to={"/"}>
+          <img src={LOGO} alt="bluTape logo" className="header-logo" />
+        </Link>
+        <FontAwesomeIcon
+          icon={menuOpen ? faBarsStaggered : faBars}
+          onClick={() => setMenuOpen(!menuOpen)}
+        />
+        <div id="nav-links" className={menuOpen ? "" : "hidden"}>
+          <Link
+            to={"/"}
+            className={location.pathname === "/" ? "active-link" : ""}
+          >
+            Home
+          </Link>
+          <Link
+            to={"/login"}
+            className={location.pathname === "/login" ? "active-link" : ""}
+          >
+            Login
+          </Link>
+          <Link
+            to={"/register"}
+            className={location.pathname === "/register" ? "active-link" : ""}
+          >
+            Register
+          </Link>
+        </div>
       </header>
       <main>
         <Outlet />
       </main>
-      <footer></footer>
+      <footer>
+        {user && (
+          <button id="logout-button" onClick={logout}>
+            LOGOUT
+          </button>
+        )}
+        <p>
+          <b>bluTape/</b>
+        </p>
+        <p>Matt's Appliances, LLC</p>
+      </footer>
       <Toaster position="bottom-right" reverseOrder={true} />
     </>
   );

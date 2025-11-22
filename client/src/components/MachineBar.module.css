@@ -1,0 +1,31 @@
+.machineBarButtonBlock {
+  display: flex;
+  box-shadow: -1px 1px 6px #000;
+  border-radius: 8px;
+  width: 100%;
+  margin: 1rem auto;
+}
+
+.machineBarButtonBlock button {
+  font-size: 100%;
+  padding: 12px 10px;
+  border: 2px solid var(--bannerBackground);
+  box-shadow: unset;
+  width: 25%;
+  text-align: center;
+}
+
+.machineBarButtonBlock button:first-child {
+  border-radius: 8px 0 0 8px;
+}
+.machineBarButtonBlock button:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.machineBarButtonBlock button.activeButton {
+  background-color: var(--buttonPrimary);
+  color: var(--linkText);
+  font-weight: 700;
+  box-shadow: inset 1px -1px 4px var(--linkText),
+    inset -2px 1px 6px var(--linkText);
+}
