@@ -3,8 +3,12 @@ import styles from "./Home.module.css";
 import React, { useState } from "react";
 import { brands, colors, machineStyles } from "../../utils/Schemas";
 import { MACHINE_CONDITIONS, STATUS, VENDORS } from "../../utils/Enums";
+import { dateForDB } from "../../utils/Tools";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [machineType, setMachineType] = useState("fridge");
   const [formData, setFormData] = useState({
     brand: "",
@@ -14,8 +18,6 @@ const Home = () => {
     color: "",
     condition: "",
     vendor: "",
-    status: "",
-    note: "",
   });
 
   const handleChange = (e) => {
@@ -34,12 +36,45 @@ const Home = () => {
     ));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(`/api/create/add_machine`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...formData, type_of: machineType }),
+      });
+
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+      toast.success(data.message);
+      setFormData({
+        brand: "",
+        model: "",
+        serial: "",
+        color: "",
+        style: "",
+        condition: "",
+        vendor: "",
+      });
+      navigate(`/machine/${data.machine_id}`);
+    } catch (error) {
+      console.error("[ADD MACHINE ERROR]: ", error);
+    }
+  };
+
   return (
     <>
       <div className={styles.homePageHeader}>
         <MachineBar machineType={machineType} setMachineType={setMachineType} />
       </div>
-      <form className={styles.machineFormHome}>
+      <form className={styles.machineFormHome} onSubmit={handleSubmit}>
         <div>
           <label htmlFor="model">Model No.</label>
           <input
@@ -96,21 +131,6 @@ const Home = () => {
             <option value="">--select vendor--</option>
             {renderOptions(VENDORS)}
           </select>
-        </div>
-        <div>
-          <label htmlFor="status">Status</label>
-          <select name="status" value={formData.status} onChange={handleChange}>
-            <option value="">--select status--</option>
-            {renderOptions(STATUS)}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="note">Note</label>
-          <textarea
-            name="note"
-            value={formData.note}
-            onChange={handleChange}
-          ></textarea>
         </div>
         <button type="submit">Submit</button>
       </form>

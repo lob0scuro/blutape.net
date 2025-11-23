@@ -15,9 +15,9 @@ export const VENDORS = {
 };
 
 export const STATUS = {
+  in_progress: "Active",
   completed: "Completed",
   trashed: "Trashed",
-  in_progress: "In Progress",
   exported: "Exported",
 };
 

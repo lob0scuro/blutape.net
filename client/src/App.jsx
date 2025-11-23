@@ -11,6 +11,8 @@ import AdminRoutes from "./layout/AdminRoutes";
 import Home from "./routes/home/Home";
 import Login from "./routes/auth/login/Login";
 import Register from "./routes/auth/register/Register";
+import Machines from "./routes/machines/table/Machines";
+import Card from "./routes/machines/card/Card";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -18,6 +20,8 @@ const App = () => {
       <Route path="/" element={<RootLayout />}>
         <Route element={<ProtectedRoutes />}>
           <Route index element={<Home />} />
+          <Route path="machines" element={<Machines />} />
+          <Route path="machine/:id" element={<Card />} />
         </Route>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />

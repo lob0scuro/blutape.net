@@ -30,30 +30,38 @@ const RootLayout = () => {
         <Link to={"/"}>
           <img src={LOGO} alt="bluTape logo" className="header-logo" />
         </Link>
-        <FontAwesomeIcon
-          icon={menuOpen ? faBarsStaggered : faBars}
-          onClick={() => setMenuOpen(!menuOpen)}
-        />
-        <div id="nav-links" className={menuOpen ? "" : "hidden"}>
-          <Link
-            to={"/"}
-            className={location.pathname === "/" ? "active-link" : ""}
-          >
-            Home
-          </Link>
-          <Link
-            to={"/login"}
-            className={location.pathname === "/login" ? "active-link" : ""}
-          >
-            Login
-          </Link>
-          <Link
-            to={"/register"}
-            className={location.pathname === "/register" ? "active-link" : ""}
-          >
-            Register
-          </Link>
-        </div>
+        {user && (
+          <>
+            <FontAwesomeIcon
+              icon={menuOpen ? faBarsStaggered : faBars}
+              onClick={() => setMenuOpen(!menuOpen)}
+            />
+            <div id="nav-links" className={menuOpen ? "" : "hidden"}>
+              <Link
+                to={"/"}
+                className={location.pathname === "/" ? "active-link" : ""}
+              >
+                Home
+              </Link>
+              <Link
+                to={"/machines"}
+                className={
+                  location.pathname === "/machines" ? "active-link" : ""
+                }
+              >
+                Machines
+              </Link>
+              <Link
+                to={"/register"}
+                className={
+                  location.pathname === "/register" ? "active-link" : ""
+                }
+              >
+                Register
+              </Link>
+            </div>
+          </>
+        )}
       </header>
       <main>
         <Outlet />
