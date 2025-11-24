@@ -1,0 +1,48 @@
+.searchToggler {
+  display: flex;
+  justify-content: center;
+  margin: 1rem auto;
+  border-radius: 8px;
+  box-shadow: -1px 1px 6px var(--linkText);
+}
+.searchToggler button {
+  font-size: 20px;
+  padding: 10px 4px;
+  box-shadow: unset;
+  border: none;
+  width: 50%;
+}
+.searchToggler button:first-child {
+  border-radius: 8px 0 0 8px;
+}
+.searchToggler button:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.searchToggler button.activeButton {
+  box-shadow: inset 2px -1px 4px var(--textSecondary),
+    inset -1px 1px 6px var(--textSecondary);
+  background-color: var(--bannerBackground);
+  color: var(--linkText);
+  font-weight: 600;
+}
+
+.searchHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.searchCamera {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20%;
+}
+
+.qrFiller {
+  width: 150px;
+  height: 150px;
+  border: 1px solid black;
+  border-radius: 6px;
+}

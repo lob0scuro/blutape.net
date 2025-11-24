@@ -52,12 +52,10 @@ const RootLayout = () => {
                 Machines
               </Link>
               <Link
-                to={"/register"}
-                className={
-                  location.pathname === "/register" ? "active-link" : ""
-                }
+                to={"/search"}
+                className={location.pathname === "/search" ? "active-link" : ""}
               >
-                Register
+                Search
               </Link>
             </div>
           </>

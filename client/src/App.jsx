@@ -13,6 +13,7 @@ import Login from "./routes/auth/login/Login";
 import Register from "./routes/auth/register/Register";
 import Machines from "./routes/machines/table/Machines";
 import Card from "./routes/machines/card/Card";
+import Search from "./routes/search/Search";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -22,6 +23,8 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="machines" element={<Machines />} />
           <Route path="machine/:id" element={<Card />} />
+          <Route path="search" element={<Search />} />
+          <Route path="admin" element={<AdminRoutes />}></Route>
         </Route>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
