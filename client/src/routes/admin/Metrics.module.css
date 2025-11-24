@@ -1,0 +1,27 @@
+.userSelect {
+  width: 80%;
+  margin: 1rem auto;
+}
+
+.metricsData {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.metricsData ul {
+  width: 100%;
+  border: 1px solid var(--bannerBackground);
+  background-color: var(--linkText);
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.metricsData ul li {
+  border: 1px solid var(--bannerBackground);
+  width: 100%;
+}

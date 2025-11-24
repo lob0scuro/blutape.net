@@ -57,6 +57,30 @@ const RootLayout = () => {
               >
                 Search
               </Link>
+              {user.is_admin && (
+                <>
+                  <Link
+                    to={"/admin/metrics"}
+                    className={
+                      location.pathname === "/admin/metrics"
+                        ? "active-link"
+                        : ""
+                    }
+                  >
+                    Metrics
+                  </Link>
+                  <Link
+                    to={"/admin/register"}
+                    className={
+                      location.pathname === "/admin/register"
+                        ? "active-link"
+                        : ""
+                    }
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
             </div>
           </>
         )}

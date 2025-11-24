@@ -77,3 +77,41 @@ def get_machines():
     except Exception as e:
         current_app.logger.error(f"[MACHINE QUERY ERROR]: {e}")
         return jsonify(success=False, message="There was an error when querying for machines"), 500
+    
+@read_bp.route("/serial/<serial>", methods=["GET"])
+def serial_search(serial):
+    try:
+        machine = Machines.query.filter_by(serial=serial.strip().upper()).first()
+        if not machine:
+            return jsonify(success=False, message="Machine not found."), 404
+        return jsonify(success=True, machine=machine.serialize()), 200
+    except Exception as e:
+        current_app.logger.error(f"[SERIAL SEARCH ERROR]: {e}")
+        return jsonify(success=False, message="There was an error when searching for machine by serial number"), 500
+    
+    
+    
+    
+#--------------------
+#    USER METRICS
+#--------------------
+
+@read_bp.route("/metrics/<int:id>", methods=["GET"])
+def user_metrics(id):
+    user = Users.query.get(id)
+    if not user:
+        return jsonify(success=False, message="User not found."), 404
+    
+    statuses = request.args.getlist("stats") #?status=in_progress&status=completed ...
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+    date_column = request.args.get("date_column", "started_on")
+    
+    stats = user.stats(
+        statuses=statuses or None,
+        start_date=start_date,
+        end_date=end_date,
+        date_column=date_column
+    )
+    
+    return jsonify(success=True, metrics=stats), 200

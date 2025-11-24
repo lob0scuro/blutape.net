@@ -82,7 +82,7 @@ header div#nav-links {
 }
 header div#nav-links a {
   font-size: 24px;
-  padding: 10px 10px 10px 24px;
+  padding: 10px 16px 10px 24px;
   color: var(--buttonSecondary);
   border: 1px solid var(--buttonSecondary);
   width: 100%;

@@ -37,7 +37,6 @@ class Users(db.Model, UserMixin):
         from datetime import datetime, date
         
         if isinstance(start_date, str):
-        
             start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
             
         if isinstance(end_date, str):

@@ -14,6 +14,7 @@ import Register from "./routes/auth/register/Register";
 import Machines from "./routes/machines/table/Machines";
 import Card from "./routes/machines/card/Card";
 import Search from "./routes/search/Search";
+import Metrics from "./routes/admin/Metrics";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -24,10 +25,12 @@ const App = () => {
           <Route path="machines" element={<Machines />} />
           <Route path="machine/:id" element={<Card />} />
           <Route path="search" element={<Search />} />
-          <Route path="admin" element={<AdminRoutes />}></Route>
+          <Route path="admin" element={<AdminRoutes />}>
+            <Route path="metrics" element={<Metrics />} />
+            <Route path="register" element={<Register />} />
+          </Route>
         </Route>
         <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
       </Route>
     )
   );

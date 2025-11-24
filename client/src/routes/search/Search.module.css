@@ -3,14 +3,17 @@
   justify-content: center;
   margin: 1rem auto;
   border-radius: 8px;
-  box-shadow: -1px 1px 6px var(--linkText);
+  box-shadow: -1px 2px 6px var(--linkText);
+  width: fit-content;
 }
 .searchToggler button {
-  font-size: 20px;
-  padding: 10px 4px;
-  box-shadow: unset;
+  font-size: 2rem;
+  padding: 10px 40px;
   border: none;
-  width: 50%;
+  width: 100%;
+  background-color: var(--linkText);
+  box-shadow: unset;
+  color: var(--bannerBackground);
 }
 .searchToggler button:first-child {
   border-radius: 8px 0 0 8px;
@@ -20,24 +23,37 @@
 }
 
 .searchToggler button.activeButton {
-  box-shadow: inset 2px -1px 4px var(--textSecondary),
-    inset -1px 1px 6px var(--textSecondary);
-  background-color: var(--bannerBackground);
-  color: var(--linkText);
-  font-weight: 600;
+  color: var(--textPrimary);
+  box-shadow: inset 1px 1px 4px var(--bannerBackground),
+    inset -1px -1px 3px var(--bannerBackground);
 }
 
-.searchHeader {
+/*SEARCH READER*/
+
+.serialSearchInput {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  gap: 2px;
+}
+.serialSearchInput label {
+  font-size: 14px;
+}
+.serialSearchInput input {
+  width: 80%;
 }
 
 .searchCamera {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 20%;
+  gap: 4px;
+  margin-top: 1rem;
+}
+
+.searchCamera p {
+  font-size: 14px;
 }
 
 .qrFiller {
@@ -45,4 +61,33 @@
   height: 150px;
   border: 1px solid black;
   border-radius: 6px;
+}
+
+/*MACHINE FOUND*/
+
+.machineFound {
+  margin: 2rem auto;
+  width: 80%;
+  border: 1px solid var(--linkText);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem;
+  color: var(--textPrimary);
+  background-color: var(--bannerBackground);
+  border-radius: 8px;
+  box-shadow: -1px 1px 6px #000;
+}
+
+.machineFound > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.machineFound svg {
+  font-size: 1.4rem;
+  color: var(--textSecondary);
 }
