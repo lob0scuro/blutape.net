@@ -44,26 +44,44 @@ class Users(db.Model, UserMixin):
             
         query = Machines.query.filter(Machines.technician_id == self.id)
         
-        if start_date and end_date:
-            query = query.filter(getattr(Machines, date_column).between(start_date, end_date))
-        elif start_date:
-            query = query.filter(getattr(Machines, date_column) >= start_date)
-        elif end_date:
-            query = query.filter(getattr(Machines, date_column) <= end_date)
-            
-        if statuses:
-            query = query.filter(Machines.status.in_(statuses))
-            
-        machines = query.all()
+        result = {
+            "in_progress": {"count": 0, "machines": []},
+            "completed": {"count": 0, "machines": []},
+            "trashed": {"count": 0, "machines": []}
+        }
         
-        result = {}
-        for m in machines:
-            result.setdefault(m.status, {"count": 0, "machines": []})
-            result[m.status]["count"] += 1
-            result[m.status]["machines"].append(m.serialize())
+        
+        for m in query.filter(Machines.status == "in_progress").all():
+            result["in_progress"]["count"] += 1
+            result["in_progress"]["machines"].append(m.serialize())
             
-        for status in ["in_progress", "completed", "trashed"]:
-            result.setdefault(status, {"count": 0, "machines": []})
+        if not start_date and not end_date:
+            return result
+        
+        complete_query = query.filter(Machines.status == "completed")
+        if start_date and end_date:
+            complete_query = complete_query.filter(Machines.completed_on.between(start_date, end_date))
+        elif start_date:
+            complete_query = complete_query.filter(Machines.completed_on >= start_date)
+        elif end_date:
+            complete_query = complete_query.filter(Machines.completed_on <= end_date)
+
+            
+        for m in complete_query.all():
+            result["completed"]["count"] += 1
+            result["completed"]["machines"].append(m.serialize())
+            
+        trash_query = query.filter(Machines.status == "trashed")
+        if start_date and end_date:
+            trash_query = trash_query.filter(Machines.trashed_on.between(start_date, end_date))
+        elif start_date:
+            trash_query = trash_query.filter(Machines.trashed_on >= start_date)
+        elif end_date:
+            trash_query = trash_query.filter(Machines.trashed_on <= end_date)
+            
+        for m in trash_query.all():
+            result["trashed"]["count"] += 1
+            result["trashed"]["machines"].append(m.serialize())
             
         return result
     
@@ -102,6 +120,8 @@ class Machines(db.Model):
     trashed_on = Column(Date, nullable=True)
     exported_on = Column(Date, nullable=True)
     
+    status_history = relationship("MachineStatusHistory", back_populates="machine", cascade="all, delete-orphan")
+    
     technician_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     
     technician = relationship("Users", back_populates="machines")
@@ -125,7 +145,8 @@ class Machines(db.Model):
             "exported_on": self.exported_on,
             "tech_id": self.technician_id,
             "tech_name": f"{self.technician.first_name} {self.technician.last_name}",            
-            "notes": [n.serialize() for n in self.notes]
+            "notes": [n.serialize() for n in self.notes],
+            "status_history": [h.serialize() for h in self.status_history]
         }
         
         
@@ -152,4 +173,28 @@ class Notes(db.Model):
             "machine_id": self.machine_id,
             "author_name": f"{self.author.first_name} {self.author.last_name}" if self.author else None,
             "machine_serial": self.machine.serial if self.machine else None
+        }
+        
+        
+class MachineStatusHistory(db.Model):
+    __tablename__ = "machine_status_history"
+    
+    id = Column(Integer, primary_key=True)
+    machine_id = Column(Integer, ForeignKey("machines.id"), nullable=False)
+    status = Column(StatusEnum, nullable=False)
+    prev_status = Column(StatusEnum, nullable=False)
+    changed_on = Column(Date, nullable=False)
+    changed_by = Column(Integer, ForeignKey("users.id"))
+    
+    machine = relationship("Machines", back_populates="status_history")
+    user = relationship("Users")
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "machine_id": self.machine_id,
+            "status": self.status,
+            "prev_status": self.prev_status,
+            "changed_on": self.changed_on.strftime("%Y-%m-%d"),
+            "changed_by": f"{self.user.first_name} {self.user.last_name}" if self.user else None
         }

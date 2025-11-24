@@ -3,25 +3,122 @@
   margin: 1rem auto;
 }
 
+.metricsDateSelect {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 1rem auto 1.8rem auto;
+  justify-content: space-between;
+}
+.metricsDateSelect > div:first-child {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem auto 1.5rem auto;
+  border-radius: 8px;
+  box-shadow: -1px 1px 6px #000;
+}
+.metricsDateSelect button {
+  font-size: 16px;
+  border: 1px solid var(--textPrimary);
+  padding: 8px;
+  font-weight: 600;
+  width: 100%;
+  box-shadow: unset;
+  background-color: var(--bannerBackground);
+}
+.metricsDateSelect button:first-child {
+  border-radius: 8px 0 0 8px;
+}
+.metricsDateSelect button:last-child {
+  border-radius: 0 8px 8px 0;
+}
+.metricsDateSelect button:disabled {
+  color: var(--inputBackground);
+  background-color: var(--buttonPrimary);
+}
+
+.metricsDateSelect div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.metricsDateSelect div label {
+  font-size: 12px;
+}
+.metricsDateSelect div input {
+  font-size: 16px;
+  height: 28px;
+  width: unset;
+}
+
+/*DATA SECTION*/
+
+.printMetricsButton {
+  font-size: 2rem;
+  align-self: flex-end;
+  background-color: var(--linkText);
+  color: var(--textPrimary);
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: -1px 1px 6px #333;
+  margin-right: 10px;
+}
+
 .metricsData {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  border-top: 2px solid var(--linkText);
+  padding-top: 2rem;
 }
 
 .metricsData ul {
   width: 100%;
   border: 1px solid var(--bannerBackground);
+  border-radius: 6px;
   background-color: var(--linkText);
   list-style-type: none;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: 1rem;
+  padding: 6px;
+}
+
+.metricsData ul p:first-child {
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.metricsData ul p:not(:first-child) {
+  color: var(--linkText);
+  font-size: 16px;
+}
+
+.metricsData ul p.machineListDate {
+  font-size: 11px;
+  color: var(--textPrimary);
 }
 
 .metricsData ul li {
   border: 1px solid var(--bannerBackground);
+  border-radius: 4px;
   width: 100%;
+  color: var(--textPrimary);
+  background-color: var(--bannerBackground);
+  padding: 4px 0 8px 4px;
+}
+
+.metricsData ul li p:first-child span {
+  margin-right: 10px;
+  color: var(--linkText);
+  font-size: 1.4rem;
 }

@@ -154,7 +154,32 @@ textarea {
   width: 100%;
   height: 42px;
   border-radius: 8px;
-  box-shadow: -1px 1px 6px var(--linkText);
+  box-shadow: -1px 1px 6px var(--linkText) !important;
+  background-color: var(--textPrimary);
   padding: 4px;
   font-size: 18px;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .printPage,
+  .printPage * {
+    visibility: visible;
+  }
+  .printPage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    font-size: 14px;
+  }
+
+  /* No background colors, no buttons */
+  button,
+  svg {
+    display: none !important;
+  }
 }
