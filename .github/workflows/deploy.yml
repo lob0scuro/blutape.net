@@ -21,26 +21,25 @@ jobs:
           ssh-keyscan -H 45.56.74.113 >> ~/.ssh/known_hosts
         shell: bash
 
-      - name: Deploy files
+      - name: Build client
         run: |
-          #clean up old tarbells on server
-          ssh cameron@45.56.74.113 "rm -f /var/www/bluTape/server/deploy.tar.gz"
-
-          # Pack your server files (adjust path if needed)
-          tar --exclude='env' --exclude='__pycache__' --exclude='*.pyc' --exclude='.git' --exclude='deploy.tar.gz' -czf deploy.tar.gz -C server .
-
-          #Use scp to copy the archive to server
-          scp deploy.tar.gz cameron@45.56.74.113:/var/www/blutape.net/server/
-
-          #deploy react build to server
           cd client
           npm ci
           npm run build
-          scp -r dist/* cameron@45.56.74.113:/var/www/blutape.net/client/dist/
-
         shell: bash
 
-      - name: SSH into server and restart app
+      - name: Package server files
         run: |
-          ssh cameron@45.56.74.113 'deploy'
+          tar --exclude='env' --exclude='__pycache__' --exclude='*.pyc' --exclude='.git' --exclude='deploy.tar.gz' -czf deploy.tar.gz -C server .
+        shell: bash
+
+      - name: Upload server package and client build
+        run: |
+          scp deploy.tar.gz cameron@45.56.74.113:/var/www/blutape.net/server/
+          scp -r client/dist/* cameron@45.56.74.113:/var/www/blutape.net/client/dist/
+        shell: bash
+
+      - name: Run deployment script on server
+        run: |
+          ssh cameron@45.56.74.113 '~/deploy.sh'
         shell: bash
