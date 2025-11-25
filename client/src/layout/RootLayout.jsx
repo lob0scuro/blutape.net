@@ -11,10 +11,43 @@ const RootLayout = () => {
   const { user, setUser } = useAuth();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
 
   useEffect(() => {
     setMenuOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const clickedInsideMenu =
+        menuRef.current && menuRef.current.contains(event.target);
+
+      const clickedMenuButton =
+        buttonRef.current && buttonRef.current.contains(event.target);
+
+      if (!clickedInsideMenu && !clickedMenuButton) {
+        setMenuOpen(false);
+      }
+    };
+
+    const handleScroll = () => {
+      setMenuOpen(false);
+    };
+
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      window.addEventListener("scroll", handleScroll);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [menuOpen]);
 
   const logout = async () => {
     if (!confirm("Logout?")) return;
@@ -35,8 +68,13 @@ const RootLayout = () => {
             <FontAwesomeIcon
               icon={menuOpen ? faBarsStaggered : faBars}
               onClick={() => setMenuOpen(!menuOpen)}
+              ref={buttonRef}
             />
-            <div id="nav-links" className={menuOpen ? "" : "hidden"}>
+            <div
+              id="nav-links"
+              className={menuOpen ? "" : "hidden"}
+              ref={menuRef}
+            >
               <Link
                 to={"/"}
                 className={location.pathname === "/" ? "active-link" : ""}
