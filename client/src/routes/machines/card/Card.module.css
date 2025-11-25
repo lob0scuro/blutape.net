@@ -17,6 +17,7 @@
 .cardHeader button.completeMachine {
   color: darkgreen;
 }
+
 .cardHeader button.trashMachine {
   color: darkred;
 }
@@ -25,7 +26,34 @@
 }
 
 .machineCardEditForm {
-  margin: 2.8rem auto;
+  margin: 2rem auto;
+}
+
+.statusDisplay {
+  border: 3px solid #000;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 10px 24px;
+  transform: rotate(-3deg);
+  font-weight: 600;
+  border-radius: 8px;
+}
+.ipHead {
+  color: var(--textPrimary);
+  border-color: var(--textPrimary);
+  transform: rotate(0deg);
+}
+.cHead {
+  color: darkgreen;
+  border-color: darkgreen;
+}
+.tHead {
+  color: darkred;
+  border-color: darkred;
+}
+.eHead {
+  color: cyan;
+  border-color: cyan;
 }
 
 .machineCardEditForm ul {

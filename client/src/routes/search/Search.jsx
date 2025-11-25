@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { brands, colors, machineStyles } from "../../utils/Schemas";
 import { TYPES } from "../../utils/Enums";
+import { Scanner } from "@yudiel/react-qr-scanner";
 
 const Search = () => {
   const [serialSearch, setSerialSearch] = useState(true);
@@ -44,6 +45,16 @@ const Search = () => {
     setSerial("");
   }, [serialSearch]);
 
+  const handleScan = (detetectedCodes) => {
+    if (!detetectedCodes || detetectedCodes.length === 0) return;
+
+    console.log(detetectedCodes[0].rawValue);
+    const value = detetectedCodes[0].rawValue;
+    if (!value) return;
+
+    setSerial(value);
+  };
+
   return (
     <div className={styles.searchContainer}>
       <div className={styles.searchToggler}>
@@ -73,7 +84,13 @@ const Search = () => {
       ) : (
         <div className={styles.searchCamera}>
           <p>QR Search</p>
-          <div className={styles.qrFiller}></div>
+          <div className={styles.qrFiller}>
+            <Scanner
+              onScan={handleScan}
+              components={{ audio: true }}
+              constraints={{ facingMode: "environment" }}
+            />
+          </div>
         </div>
       )}
       {machine && (

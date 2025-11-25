@@ -16,30 +16,26 @@ import {
 import { brands, colors, machineStyles } from "../../../utils/Schemas";
 import { VENDORS, MACHINE_CONDITIONS, TYPES } from "../../../utils/Enums";
 import { formatDate } from "../../../utils/Tools";
+import clsx from "clsx";
 
-{
-  /* <h1
-  style={{ textAlign: "center", marginTop: "3rem", fontSize: "1.8rem" }}
->
-  Machine Not Found
-</h1> */
-}
-
-{
-  /* <FontAwesomeIcon icon={faPrint} /> */
-}
-{
-  /* <FontAwesomeIcon icon={faSquareCheck} /> */
-}
-{
-  /* <FontAwesomeIcon icon={faScrewdriverWrench} /> */
-}
-{
-  /* <FontAwesomeIcon icon={faPenClip} /> */
-}
-{
-  /* <FontAwesomeIcon icon={faRecycle} /> */
-}
+const STATUS_MAP = {
+  in_progress: {
+    className: styles.ipHead,
+    label: "In Progress",
+  },
+  completed: {
+    className: styles.cHead,
+    label: "Complete",
+  },
+  trashed: {
+    className: styles.tHead,
+    label: "Trashed",
+  },
+  exported: {
+    className: styles.eHead,
+    label: "Exported",
+  },
+};
 
 const Card = () => {
   const { id } = useParams();
@@ -84,6 +80,93 @@ const Card = () => {
 
     fetchMachine();
   }, [id]);
+
+  const getActions = (machine, editing, setEditing, handleStatusChange) => {
+    const STATUS_ACTIONS = {
+      in_progress: [
+        {
+          icon: faSquareCheck,
+          className: styles.completeMachine,
+          onClick: () => handleStatusChange("completed"),
+        },
+        {
+          icon: editing.machine ? faRotateLeft : faPenToSquare,
+          className: styles.editMachine,
+          onClick: () =>
+            setEditing({ machine: !editing.machine, notes: false }),
+        },
+        {
+          icon: faTrashCan,
+          className: styles.trashMachine,
+          onClick: () => handleStatusChange("trashed"),
+        },
+      ],
+      completed: [
+        {
+          icon: faScrewdriverWrench,
+          className: styles.restoreMachine,
+          onClick: () => handleStatusChange("in_progress"),
+        },
+        {
+          icon: faTrashCan,
+          className: styles.trashMachine,
+          onClick: () => handleStatusChange("trashed"),
+        },
+      ],
+      trashed: [
+        {
+          icon: faRecycle,
+          className: styles.recycleMachine,
+          onClick: () => handleStatusChange("in_progress"),
+        },
+      ],
+      exported: [
+        {
+          icon: faRotateLeft,
+          className: styles.restoreMachine,
+          onClick: () => handleStatusChange("in_progress"),
+        },
+      ],
+    };
+
+    // All statuses always get a print button
+    const printButton = {
+      icon: faPrint,
+      className: styles.printMachine,
+      onClick: () => printLabel(),
+    };
+
+    return [printButton, ...(STATUS_ACTIONS[machine.status] || [])];
+  };
+
+  const printLabel = async () => {
+    if (!confirm("Print Label?")) return;
+    try {
+      const response = await fetch("/api/print/label", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: id,
+          model: formData.model,
+          serial: formData.serial,
+          brand: formData.brand,
+          style: formData.style,
+          color: formData.color,
+        }),
+      });
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+      toast.success(data.message);
+    } catch (error) {
+      console.error("[LABEL ERROR]: ", error);
+      toast.error(error.message);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -168,59 +251,27 @@ const Card = () => {
   return (
     <div>
       <div className={styles.cardHeader}>
-        <button
-          className={
-            machine.status !== "completed"
-              ? styles.completeMachine
-              : styles.printMachine
-          }
-          onClick={() =>
-            handleStatusChange(
-              machine.status === "completed" ? "in_progress" : "completed"
-            )
-          }
-          style={{ display: machine.status === "trashed" ? "none" : "flex" }}
-        >
-          <FontAwesomeIcon
-            icon={
-              machine.status !== "completed"
-                ? faSquareCheck
-                : faScrewdriverWrench
-            }
-          />
-        </button>
-        <button
-          className={styles.editMachine}
-          onClick={() =>
-            setEditing({ ...editing, machine: !editing.machine, notes: false })
-          }
-          disabled={machine.status === "trashed"}
-        >
-          <FontAwesomeIcon
-            icon={editing.machine ? faRotateLeft : faPenToSquare}
-          />
-        </button>
-        <button className={styles.printMachine}>
-          <FontAwesomeIcon icon={faPrint} />
-        </button>
-        <button
-          className={
-            machine.status !== "trashed"
-              ? styles.trashMachine
-              : styles.recycleMachine
-          }
-          onClick={() =>
-            handleStatusChange(
-              machine.status === "trashed" ? "in_progress" : "trashed"
-            )
-          }
-        >
-          <FontAwesomeIcon
-            icon={machine.status !== "trashed" ? faTrashCan : faRecycle}
-          />
-        </button>
+        {getActions(machine, editing, setEditing, handleStatusChange).map(
+          ({ icon, className, onClick, disabled }, idx) => (
+            <button
+              key={idx}
+              className={className}
+              onClick={onClick}
+              disabled={disabled}
+            >
+              <FontAwesomeIcon icon={icon} />
+            </button>
+          )
+        )}
       </div>
-
+      <div
+        className={clsx(
+          styles.statusDisplay,
+          machine.status ? STATUS_MAP[machine.status].className : ""
+        )}
+      >
+        {STATUS_MAP[machine.status]?.label || ""}
+      </div>
       <form className={styles.machineCardEditForm} onSubmit={handleSubmit}>
         <ul>
           <li>

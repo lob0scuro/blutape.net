@@ -1,6 +1,6 @@
 from flask import jsonify, request, Blueprint, current_app
 from app.extensions import db
-from flask_login import current_user
+from flask_login import current_user, login_required
 from app.models import Machines, Notes, Users
 from datetime import datetime, timezone
 
@@ -51,11 +51,10 @@ def get_machines():
         user_id = request.args.get("user_id", type=int)
         status = request.args.get("status")
         page = request.args.get("page", 1, type=int)
-        per_page = 3
+        per_page = 8
         
         query = Machines.query
         
-        print(user_id)
         if user_id:
             query = query.filter_by(technician_id=user_id)
         if status:
@@ -111,7 +110,23 @@ def user_metrics(id):
         statuses=statuses or None,
         start_date=start_date,
         end_date=end_date,
-        date_column=date_column
+        date_column=date_column,  
     )
     
-    return jsonify(success=True, metrics=stats), 200
+    return jsonify(success=True, metrics=stats, user=f"{user.first_name} {user.last_name}" if user else None), 200
+
+
+#--------------------
+#    EXPORT MACHINES
+#--------------------
+@read_bp.route("/export", methods=["GET"])
+@login_required
+def export_list():
+    try:
+        machines = Machines.query.filter_by(status="completed").all()
+        if not machines:
+            return jsonify(success=True, message="No machines to export"), 200
+        return jsonify(success=True, machines=[m.serialize() for m in machines]), 200
+    except Exception as e:
+        current_app.logger.error(f"[MACHINE EXPORT ERROR]: {e}")
+        return jsonify(success=False, message="There was an error when getting Export list"), 500

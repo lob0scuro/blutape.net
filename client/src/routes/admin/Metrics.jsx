@@ -7,8 +7,6 @@ import { brands, machineStyles } from "../../utils/Schemas";
 import { TYPES } from "../../utils/Enums";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPrint } from "@fortawesome/free-solid-svg-icons";
-import { useReactToPrint } from "react-to-print";
-import MetricsPrint from "../../components/metrics-print/MEtricsPrint";
 
 const Metrics = () => {
   const [users, setUsers] = useState(null);
@@ -50,11 +48,6 @@ const Metrics = () => {
       fetchMetrics();
     }
   }, [params]);
-
-  const handlePrint = useReactToPrint({
-    documentTitle: "Metrics",
-    content: contentRef.current,
-  });
 
   return (
     <div className={styles.metricsContainer}>
@@ -142,12 +135,8 @@ const Metrics = () => {
       </div>
 
       {metrics && (
-        <div className={styles.metricsData} ref={contentRef}>
-          <FontAwesomeIcon
-            icon={faPrint}
-            className={styles.printMetricsButton}
-            onClick={handlePrint}
-          />
+        <div className={styles.metricsData}>
+          <h1 className={styles.metricsTitle}>{metrics.user}</h1>
           <ul className={styles.inProgressMachines}>
             <li>
               <h2>
@@ -164,6 +153,7 @@ const Metrics = () => {
                       <FontAwesomeIcon
                         icon={faEye}
                         onClick={() => navigate(`/machine/${id}`)}
+                        className={styles.gotomachine}
                       />
                     </span>
                   </p>
@@ -196,6 +186,7 @@ const Metrics = () => {
                       <FontAwesomeIcon
                         icon={faEye}
                         onClick={() => navigate(`/machine/${id}`)}
+                        className={styles.gotomachine}
                       />
                     </span>
                   </p>
@@ -228,6 +219,7 @@ const Metrics = () => {
                       <FontAwesomeIcon
                         icon={faEye}
                         onClick={() => navigate(`/machine/${id}`)}
+                        className={styles.gotomachine}
                       />
                     </span>
                   </p>
@@ -243,7 +235,14 @@ const Metrics = () => {
           </ul>
         </div>
       )}
-      {/* <MetricsPrint ref={contentRef} /> */}
+      {metrics && (
+        <button
+          className={styles.printMetricsButton}
+          onClick={() => window.print()}
+        >
+          <FontAwesomeIcon icon={faPrint} />
+        </button>
+      )}
     </div>
   );
 };

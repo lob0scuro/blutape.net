@@ -70,6 +70,14 @@ const RootLayout = () => {
                     Metrics
                   </Link>
                   <Link
+                    to={"/admin/export"}
+                    className={
+                      location.pathname === "/admin/export" ? "active-link" : ""
+                    }
+                  >
+                    Export
+                  </Link>
+                  <Link
                     to={"/admin/register"}
                     className={
                       location.pathname === "/admin/register"

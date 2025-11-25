@@ -15,7 +15,7 @@ import Machines from "./routes/machines/table/Machines";
 import Card from "./routes/machines/card/Card";
 import Search from "./routes/search/Search";
 import Metrics from "./routes/admin/Metrics";
-import MetricsPrint from "./components/metrics-print/MEtricsPrint";
+import Export from "./routes/admin/export/Export";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -29,7 +29,7 @@ const App = () => {
           <Route path="admin" element={<AdminRoutes />}>
             <Route path="metrics" element={<Metrics />} />
             <Route path="register" element={<Register />} />
-            <Route path="metrics/print" element={<MetricsPrint />} />
+            <Route path="export" element={<Export />} />
           </Route>
         </Route>
         <Route path="register" element={<Register />} />

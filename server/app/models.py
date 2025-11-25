@@ -45,6 +45,7 @@ class Users(db.Model, UserMixin):
         query = Machines.query.filter(Machines.technician_id == self.id)
         
         result = {
+            "user": f"{self.first_name} {self.last_name}",
             "in_progress": {"count": 0, "machines": []},
             "completed": {"count": 0, "machines": []},
             "trashed": {"count": 0, "machines": []}

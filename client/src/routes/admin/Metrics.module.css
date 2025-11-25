@@ -53,21 +53,10 @@
 .metricsDateSelect div input {
   font-size: 16px;
   height: 28px;
-  width: 90%;
+  width: 80%;
 }
 
 /*DATA SECTION*/
-
-.printMetricsButton {
-  font-size: 2rem;
-  align-self: flex-end;
-  background-color: var(--linkText);
-  color: var(--textPrimary);
-  padding: 8px;
-  border-radius: 8px;
-  box-shadow: -1px 1px 6px #333;
-  margin-right: 10px;
-}
 
 .metricsData {
   display: flex;
@@ -120,8 +109,95 @@
   box-shadow: -1px 1px 6px #333;
 }
 
+.metricsData ul > li:first-child {
+  border: none;
+  background-color: transparent;
+  box-shadow: unset;
+}
+
 .metricsData ul li p:first-child span {
   margin-right: 10px;
   color: var(--linkText);
   font-size: 1.4rem;
+}
+
+ul.completedMachines {
+  background-color: darkgreen;
+}
+ul.completedMachines li {
+  background-color: rgb(19, 83, 14);
+  color: rgb(94, 196, 94);
+  border: 1px solid greenyellow;
+}
+ul.completedMachines li p {
+  color: var(--textPrimary) !important;
+}
+
+ul.trashedMachines {
+  background-color: darkred;
+}
+ul.trashedMachines li {
+  background: rgb(131, 5, 5);
+  color: rgb(255, 74, 74);
+  border: 1px solid rgb(253, 51, 51);
+}
+ul.trashedMachines li p {
+  color: var(--textPrimary) !important;
+}
+
+.printMetricsButton {
+  font-size: 2rem;
+  background-color: var(--linkText);
+  color: var(--textPrimary);
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: -1px 1px 6px #333;
+  margin: 2rem auto;
+  width: 100%;
+}
+
+.metricsTitle {
+  display: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+    color: #000 !important;
+  }
+
+  .metricsData,
+  .metricsData * {
+    visibility: visible !important;
+    color: #000 !important;
+    border-color: #000 !important;
+  }
+
+  .metricsTitle {
+    display: block;
+  }
+  .metricsData {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    color: #000 !important;
+  }
+
+  .metricsData ul li p {
+    color: #000 !important;
+  }
+
+  .printMetricsButton {
+    display: none !important;
+  }
+
+  svg.gotomachine {
+    display: none;
+  }
+
+  * {
+    background: none !important;
+    box-shadow: none !important;
+  }
 }
