@@ -159,27 +159,3 @@ textarea {
   padding: 4px;
   font-size: 18px;
 }
-
-@media print {
-  body * {
-    visibility: hidden;
-  }
-  .printPage,
-  .printPage * {
-    visibility: visible;
-  }
-  .printPage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 1rem;
-    font-size: 14px;
-  }
-
-  /* No background colors, no buttons */
-  button,
-  svg {
-    display: none !important;
-  }
-}

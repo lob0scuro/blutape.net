@@ -1,5 +1,5 @@
 import styles from "./Metrics.module.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { formatDate, getToday, shiftDate } from "../../utils/Tools";
@@ -7,6 +7,8 @@ import { brands, machineStyles } from "../../utils/Schemas";
 import { TYPES } from "../../utils/Enums";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPrint } from "@fortawesome/free-solid-svg-icons";
+import { useReactToPrint } from "react-to-print";
+import MetricsPrint from "../../components/metrics-print/MEtricsPrint";
 
 const Metrics = () => {
   const [users, setUsers] = useState(null);
@@ -18,6 +20,7 @@ const Metrics = () => {
     user_id: null,
   });
   const navigate = useNavigate();
+  const contentRef = useRef(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -41,13 +44,17 @@ const Metrics = () => {
       if (!data.success) {
         toast.error(data.message);
       }
-      console.log(data.metrics);
       setMetrics(data.metrics);
     };
-    if (params.user_id !== "") {
+    if (params.user_id !== "" && params.user_id !== null) {
       fetchMetrics();
     }
   }, [params]);
+
+  const handlePrint = useReactToPrint({
+    documentTitle: "Metrics",
+    content: contentRef.current,
+  });
 
   return (
     <div className={styles.metricsContainer}>
@@ -86,7 +93,10 @@ const Metrics = () => {
                 const dd = shiftDate(params.end_date, 1);
                 setParams({ ...params, start_date: d, end_date: dd });
               }}
-              disabled={params.end_date === getToday()}
+              disabled={
+                params.end_date === getToday() ||
+                params.start_date !== params.end_date
+              }
             >
               next
             </button>
@@ -118,10 +128,10 @@ const Metrics = () => {
         <div>
           <select
             name="userID"
-            value={params.user_id}
+            value={params.user_id ?? ""}
             onChange={(e) => setParams({ ...params, user_id: e.target.value })}
           >
-            <option value={null}>--select user--</option>
+            <option value="">--select user--</option>
             {users?.map(({ id, first_name, last_name }) => (
               <option value={id} key={id}>
                 {first_name} {last_name}
@@ -130,22 +140,20 @@ const Metrics = () => {
           </select>
         </div>
       </div>
+
       {metrics && (
-        <div className={styles.metricsData}>
+        <div className={styles.metricsData} ref={contentRef}>
           <FontAwesomeIcon
             icon={faPrint}
             className={styles.printMetricsButton}
-            onClick={() =>
-              navigate(
-                `/admin/metrics/print?user_id=${params.user_id}&start_date=${params.start_date}&end_date=${params.end_date}`
-              )
-            }
+            onClick={handlePrint}
           />
-
           <ul className={styles.inProgressMachines}>
-            <h2>
-              <span>{metrics.in_progress.count}</span> In Progress
-            </h2>
+            <li>
+              <h2>
+                <span>{metrics.in_progress.count}</span> In Progress
+              </h2>
+            </li>
 
             {metrics.in_progress.machines.map(
               ({ id, brand, model, serial, style }) => (
@@ -170,13 +178,15 @@ const Metrics = () => {
             )}
           </ul>
           <ul className={styles.completedMachines}>
-            <h2>
-              <span>{metrics.completed.count}</span> Completed
-            </h2>
-            <p className={styles.machineListDate}>
-              Between {formatDate(params.start_date)} and{" "}
-              {formatDate(params.end_date)}
-            </p>
+            <li>
+              <h2>
+                <span>{metrics.completed.count}</span> Completed
+              </h2>
+              <p className={styles.machineListDate}>
+                Between {formatDate(params.start_date)} and{" "}
+                {formatDate(params.end_date)}
+              </p>
+            </li>
             {metrics.completed.machines.map(
               ({ id, brand, model, serial, style }) => (
                 <li key={id}>
@@ -200,13 +210,15 @@ const Metrics = () => {
             )}
           </ul>
           <ul className={styles.trashedMachines}>
-            <h2>
-              <span>{metrics.trashed.count}</span> Trashed
-            </h2>
-            <p className={styles.machineListDate}>
-              Between {formatDate(params.start_date)} and{" "}
-              {formatDate(params.end_date)}
-            </p>
+            <li>
+              <h2>
+                <span>{metrics.trashed.count}</span> Trashed
+              </h2>
+              <p className={styles.machineListDate}>
+                Between {formatDate(params.start_date)} and{" "}
+                {formatDate(params.end_date)}
+              </p>
+            </li>
             {metrics.trashed.machines.map(
               ({ id, brand, model, serial, style }) => (
                 <li key={id}>
@@ -231,6 +243,7 @@ const Metrics = () => {
           </ul>
         </div>
       )}
+      {/* <MetricsPrint ref={contentRef} /> */}
     </div>
   );
 };
