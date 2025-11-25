@@ -41,5 +41,5 @@ jobs:
 
       - name: Run deployment script on server
         run: |
-          ssh cameron@45.56.74.113 '~/deploy.sh'
+          ssh cameron@45.56.74.113 'usr/local/bin/deploy.sh'
         shell: bash
