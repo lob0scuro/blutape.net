@@ -74,7 +74,7 @@ def update_machine(id):
             update_machine_status(machine, data["status"])
 
         db.session.commit()
-        current_app.logger.info(f"[MACHINE UPDATED] User {current_user.id} updated machine {id}")
+        current_app.logger.info(f"[MACHINE UPDATED] User {current_user.first_name} {current_user.last_name} updated machine {id}")
         return jsonify(success=True, machine=machine.serialize(), message="machine status updated!"), 200
 
     except Exception as e:

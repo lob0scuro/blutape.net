@@ -141,7 +141,7 @@ def print_label():
         response = requests.post(URL, data=zpl)
         
         if response.status_code == 200:
-            current_app.logger.info(f"{current_user.first_name} {current_user.last_name} just printed a label")
+            current_app.logger.info(f"{current_user.first_name} {current_user.last_name} just printed a label, MachineID: {data.get("id")}")
             return jsonify(success=True, message="Label sent to printer successfully"), 200
         else:
             current_app.logger.error(f"Failed to send label to printer: {response.text}")
