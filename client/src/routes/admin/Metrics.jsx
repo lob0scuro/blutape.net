@@ -7,6 +7,8 @@ import { brands, machineStyles } from "../../utils/Schemas";
 import { TYPES } from "../../utils/Enums";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPrint } from "@fortawesome/free-solid-svg-icons";
+import { useReactToPrint } from "react-to-print";
+import UserMetricsPrintPage from "./prints/UserMetricsPrintPage";
 
 const Metrics = () => {
   const [users, setUsers] = useState(null);
@@ -48,6 +50,18 @@ const Metrics = () => {
       fetchMetrics();
     }
   }, [params]);
+
+  useEffect(() => {
+    if (params.user_id === "") {
+      setMetrics(null);
+    }
+  }, [params.user_id]);
+
+  const handlePrint = useReactToPrint({
+    content: () => contentRef.current,
+    documentTitle: "User Metrics",
+    onAfterPrint: () => toast.success("Metrics Printed!"),
+  });
 
   return (
     <div className={styles.metricsContainer}>
@@ -238,10 +252,23 @@ const Metrics = () => {
       {metrics && (
         <button
           className={styles.printMetricsButton}
-          onClick={() => window.print()}
+          onClick={() => {
+            handlePrint();
+          }}
+          disabled
         >
           <FontAwesomeIcon icon={faPrint} />
         </button>
+      )}
+      {metrics && users && (
+        <div style={{ display: "none" }}>
+          <UserMetricsPrintPage
+            start_date={params.start_date}
+            end_date={params.end_date}
+            metrics={metrics}
+            ref={contentRef}
+          />
+        </div>
       )}
     </div>
   );
