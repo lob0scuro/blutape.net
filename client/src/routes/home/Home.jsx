@@ -50,9 +50,6 @@ const Home = () => {
       });
 
       const data = await response.json();
-      if (response.status === 409) {
-        throw new Error(data.message);
-      }
       if (!data.success) {
         throw new Error(data.message);
       }
@@ -69,6 +66,7 @@ const Home = () => {
       navigate(`/machine/${data.machine_id}`);
     } catch (error) {
       console.error("[ADD MACHINE ERROR]: ", error);
+      toast.error(error.message);
     }
   };
 
@@ -85,6 +83,7 @@ const Home = () => {
             name="model"
             value={formData.model}
             onChange={handleChange}
+            required
           />
         </div>
         <div>
@@ -94,6 +93,7 @@ const Home = () => {
             name="serial"
             value={formData.serial}
             onChange={handleChange}
+            required
           />
         </div>
         <div>
