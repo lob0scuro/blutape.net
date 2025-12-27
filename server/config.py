@@ -38,3 +38,4 @@ class Config:
     MAIL_PASSWORD = environ.get("APP_PASSWORD")
     MAIL_USE_TLS = True
     MAIL_DEFAULT_SENDER = "cameron@mattsappliancesla.net"
+    ADMIN_EMAIL = environ.get("ADMIN_EMAIL", "cameron@mattsappliancesla.net")
