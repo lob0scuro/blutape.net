@@ -98,14 +98,24 @@ const Home = () => {
         </div>
         <div>
           <label htmlFor="brand">Brand</label>
-          <select name="brand" value={formData.brand} onChange={handleChange}>
+          <select
+            name="brand"
+            value={formData.brand}
+            onChange={handleChange}
+            required
+          >
             <option value="--Select a brand--">--Select a brand--</option>
             {renderOptions(brands)}
           </select>
         </div>
         <div>
           <label htmlFor="style">Style</label>
-          <select name="style" value={formData.style} onChange={handleChange}>
+          <select
+            name="style"
+            value={formData.style}
+            onChange={handleChange}
+            required
+          >
             <option value="">--select a style</option>
             {renderOptions(machineStyles[machineType])}
           </select>
@@ -123,6 +133,7 @@ const Home = () => {
             name="condition"
             value={formData.condition}
             onChange={handleChange}
+            required
           >
             <option value="">--select condition--</option>
             {renderOptions(MACHINE_CONDITIONS)}
@@ -130,7 +141,12 @@ const Home = () => {
         </div>
         <div>
           <label htmlFor="vendor">Vendor</label>
-          <select name="vendor" value={formData.vendor} onChange={handleChange}>
+          <select
+            name="vendor"
+            value={formData.vendor}
+            onChange={handleChange}
+            required
+          >
             <option value="">--select vendor--</option>
             {renderOptions(VENDORS)}
           </select>
