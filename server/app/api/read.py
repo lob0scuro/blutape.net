@@ -83,6 +83,7 @@ def serial_search(serial):
         machine = Machines.query.filter_by(serial=serial.strip().upper()).first()
         if not machine:
             return jsonify(success=False, message="Machine not found."), 404
+        current_app.logger.info(f"[MACHINE QUERY]: {current_user.first_name} {current_user.last_name} has queried machine s:{serial}")
         return jsonify(success=True, machine=machine.serialize()), 200
     except Exception as e:
         current_app.logger.error(f"[SERIAL SEARCH ERROR]: {e}")

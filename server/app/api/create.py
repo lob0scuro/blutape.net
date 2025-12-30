@@ -38,10 +38,10 @@ def add_machine():
         
         db.session.commit()
         
-        current_app.logger.info(f"{current_user.first_name} {current_user.last_name[0]}. logged a new {style} {type_of} into the database/// model:{model.upper()} serial:{serial.upper()}")
+        current_app.logger.info(f"[NEW MACHINE ENTRY]: {current_user.first_name} {current_user.last_name[0]} - {style} {type_of} | model:{model.upper()} serial:{serial.upper()}")
         return jsonify(success=True, message=f"Machine has been logged.", machine_id=new_machine.id), 200
     except Exception as e:
-        current_app.logger.error(f"An error occured when inputing a new machine: {e}")
+        current_app.logger.error(f"[NEW MACHINE ERROR]: An error occured when inputing a new machine: {e}")
         db.session.rollback()
         return jsonify(success=False, message=f"Error when logging new machine: {e}"), 500
     
@@ -58,7 +58,7 @@ def add_note():
         )
         db.session.add(new_note)
         db.session.commit()
-        current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has added a new note to machine {machine_id}")
+        current_app.logger.info(f"[NEW NOTE]: {current_user.first_name} {current_user.last_name} has added a new note to machine {machine_id}")
         return jsonify(success=True, message="Note added!", note=new_note.serialize()), 201
     except Exception as e:
         current_app.logger.error(f"[NOTE ERROR]: {e}")

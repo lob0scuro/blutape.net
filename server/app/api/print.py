@@ -73,7 +73,7 @@ def export_machines():
         
         msg.send()
         
-        current_app.logger.info(f"{current_user.first_name} {current_user.last_name} exported XLSX to {current_user.email}")
+        current_app.logger.info(f"[EXPORT]: {current_user.first_name} {current_user.last_name} exported XLSX to {current_user.email}")
         return jsonify(success=True, message="Export successful, email has been sent"), 200
     
     except Exception as e:
@@ -141,13 +141,13 @@ def print_label():
         response = requests.post(URL, data=zpl)
         
         if response.status_code == 200:
-            current_app.logger.info(f"{current_user.first_name} {current_user.last_name} just printed a label, MachineID: {data.get("id")}")
+            current_app.logger.info(f"[LABEL]: {current_user.first_name} {current_user.last_name} just printed a label, MachineID: {data.get("id")}")
             return jsonify(success=True, message="Label sent to printer successfully"), 200
         else:
-            current_app.logger.error(f"Failed to send label to printer: {response.text}")
+            current_app.logger.error(f"[LABEL ERROR]: Failed to send label to printer: {response.text}")
             return jsonify(success=False, message=f"Failed to send label to printer: Error({response.text})"), 500
              
     except Exception as e:
-        current_app.logger.error(f"Error when sending ZPL: {e}")
+        current_app.logger.error(f"[LABEL ERROR]: Error when sending ZPL: {e}")
         return jsonify(success=False, message=f"Error when sending ZPL to printer: {e}"),500
     

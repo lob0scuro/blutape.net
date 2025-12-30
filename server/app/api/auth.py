@@ -35,10 +35,10 @@ def register():
         
         db.session.add(new_user)
         db.session.commit()
-        current_app.logger.info(f"{new_user.first_name} has been added to the database")
+        current_app.logger.info(f"[NEW REGISTRATION]: {new_user.first_name} has been added to the database")
         return jsonify(success=True, message=f"{new_user.first_name} has been registered!"), 200
     except Exception as e:
-        current_app.logger.error(f"Error when adding user: {e}")
+        current_app.logger.error(f"[REGISTRATION ERROR]: Error when adding user: {e}")
         db.session.rollback()
         return jsonify(success=False, message=f"Error when adding user: {e}"), 500
     
@@ -57,21 +57,21 @@ def login():
         login_user(user)
         session["user"] = f"{user.first_name} {user.last_name[0]}"
         session["device"] = request.headers.get("User-Agent")
-        current_app.logger.info(f"{user.first_name} {user.last_name} has logged in at {datetime.now(timezone.utc)}")
+        current_app.logger.info(f"[LOGIN]: {user.first_name} {user.last_name} has logged in at {datetime.now(timezone.utc)}")
         return jsonify(success=True, message=f"Logged in as {user.first_name} {user.last_name[0]}.", user=user.serialize()), 200
     except Exception as e:
-        current_app.logger.error(f"There was an error when {user.first_name} {user.last_name} was logging in: {e}")
+        current_app.logger.error(f"[LOGIN ERROR]: There was an error when {user.first_name} {user.last_name} was logging in: {e}")
         return jsonify(success=False, message=f"There was an error when {user.first_name} {user.last_name} was logging in: {e}"), 500
     
     
 @auth_bp.route("/logout", methods=["GET"])
 def logout():
     try:
-        current_app.logger.info(f"{current_user.first_name} {current_user.last_name[0]}. has logged out.")
+        current_app.logger.info(f"[LOGOUT]: {current_user.first_name} {current_user.last_name[0]}. has logged out.")
         logout_user()
         return jsonify(success=True, message="User logged out."), 200
     except Exception as e:
-        current_app.logger.error(f"There was an error when {current_user.first_name} {current_user.last_name} was logging out: {e}")
+        current_app.logger.error(f"[LOGOUT ERROR]: There was an error when {current_user.first_name} {current_user.last_name} was logging out: {e}")
         return jsonify(success=False, message=f"There was an error when {current_user.first_name} {current_user.last_name} was logging out: {e}"), 500
     
     
