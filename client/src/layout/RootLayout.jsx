@@ -95,6 +95,22 @@ const RootLayout = () => {
               >
                 Search
               </Link>
+              <Link
+                to={"/read-parts"}
+                className={
+                  location.pathname === "/read-parts" ? "active-link" : ""
+                }
+              >
+                Parts List
+              </Link>
+              <Link
+                to={"/remove-part"}
+                className={
+                  location.pathname === "/remove-part" ? "active-link" : ""
+                }
+              >
+                Use Parts
+              </Link>
               {user.is_admin && (
                 <>
                   <Link
@@ -114,6 +130,16 @@ const RootLayout = () => {
                     }
                   >
                     Export
+                  </Link>
+                  <Link
+                    to={"/admin/add-parts"}
+                    className={
+                      location.pathname === "/admin/add-parts"
+                        ? "active-link"
+                        : ""
+                    }
+                  >
+                    Add Parts
                   </Link>
                   <Link
                     to={"/admin/register"}

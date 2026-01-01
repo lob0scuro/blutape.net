@@ -1,14 +1,16 @@
 from app.extensions import db
 from sqlalchemy import Column, Text, String, Integer, Boolean, Enum, Date, DateTime, ForeignKey, func, case, and_
 from sqlalchemy.orm import relationship
+from sqlalchemy.exc import SQLAlchemyError
 from flask_login import UserMixin
+from datetime import datetime, timezone
 
 TypeEnum = Enum("fridge", "washer", "dryer", "range", "microwave", "water_heater", "stackable", "dishwasher")
 ConditionEnum = Enum("NEW", "USED", "Scratch and Dent", name="condition_enum")
 VendorEnum = Enum("pasadena", "baton_rouge", "alexandria", "stines_lc", "stines_jn", "scrappers", "viking", "unknown", name="vendor_enum")
 StatusEnum = Enum("completed", "trashed", "in_progress", "exported", "archived", name="status_enum")
 RoleEnum = Enum("office", "fridge_tech", "washer_tech", "dryer_range_tech", "inventory")
-
+PartsTransactionTypeEnum = Enum("add", "remove", name="parts_transaction_type_enum")
 
 
 # -----------------------
@@ -198,4 +200,113 @@ class MachineStatusHistory(db.Model):
             "prev_status": self.prev_status,
             "changed_on": self.changed_on.strftime("%Y-%m-%d"),
             "changed_by": f"{self.user.first_name} {self.user.last_name}" if self.user else None
+        }
+        
+        
+        
+# -----------------------
+#       PARTS
+# ----------------------- 
+class Part(db.Model):
+    __tablename__ = "parts"
+    
+    id = Column(Integer, primary_key=True)
+    part_no = Column(String(150), nullable=False)
+    price = Column(Integer, nullable=False)
+    quantity = Column(Integer, nullable=False, server_default="1")
+    
+    transactions = relationship("PartsTransaction", backref="part", lazy="dynamic")
+    
+    def add_stock(self, user, qty):
+        try:
+            self.quantity += qty
+            db.session.add(
+                PartsTransaction(
+                    part_id=self.id,
+                    user_id=user.id,
+                    quantity=qty,
+                    transaction_type="add"
+                )
+            )
+            db.session.commit()
+        except SQLAlchemyError:
+            db.session.rollback()
+            raise
+        
+    
+    def remove_stock(self, user, qty):
+        try:
+            if qty > self.quantity:
+                raise ValueError(f"Cannot remove {qty}, only {self.quantity} in stock")
+            self.quantity -= qty
+            db.session.add(
+                PartsTransaction(
+                    part_id=self.id,
+                    user_id=user.id,
+                    quantity=qty,
+                    transaction_type="remove"
+                )
+            )
+            db.session.commit()
+        except SQLAlchemyError:
+            db.session.rollback()
+            raise
+        
+    @property
+    def ebay_stock(self):
+        """
+        Calculates total Ebay stock
+        total 'add' transactions - total 'remove' transactions
+        """
+        
+        added = db.session.query(
+            func.coalesce(func.sum(PartsTransaction.quantity), 0)
+        ).filter(
+            PartsTransaction.part_id == self.id,
+            PartsTransaction.transaction_type == "add"
+        ).scalar()
+        
+        removed = db.session.query(
+            func.coalesce(func.sum(PartsTransaction.quantity), 0)
+        ).filter(
+            PartsTransaction.part_id == self.id,
+            PartsTransaction.transaction_type == "remove"
+        ).scalar()
+        
+        return added - removed
+        
+        
+    def serialize(self):
+        return {
+            "id": self.id,
+            "part_no": self.part_no,
+            "price": self.price,
+            "quantity": self.quantity,
+            "ebay_stock": self.ebay_stock
+        }
+        
+        
+class PartsTransaction(db.Model):
+    __tablename__ = "parts_transactions"
+    
+    id = Column(Integer, primary_key=True)
+    
+    part_id = Column(Integer, ForeignKey("parts.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    transaction_type = Column(PartsTransactionTypeEnum, nullable=False)
+    timestamp = Column(Date, default=lambda: datetime.now(timezone.utc).date(), nullable=False)
+    
+    user = relationship("Users")
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "part_id": self.part_id,
+            "part_no": self.part.part_no if self.part else None,
+            "user_id": self.user_id,
+            "user_name": f"{self.user.first_name} {self.user.last_name}" if self.user else None,
+            "quantity": self.quantity,
+            "transaction_type": self.transaction_type,
+            "timestamp": self.timestamp.isoformat()
         }

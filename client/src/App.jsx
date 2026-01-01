@@ -16,6 +16,9 @@ import Card from "./routes/machines/card/Card";
 import Search from "./routes/search/Search";
 import Metrics from "./routes/admin/Metrics";
 import Export from "./routes/admin/export/Export";
+import AddParts from "./routes/parts/add/AddParts";
+import RemoveParts from "./routes/parts/remove/RemoveParts";
+import ReadParts from "./routes/parts/read/ReadParts";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -26,10 +29,13 @@ const App = () => {
           <Route path="machines" element={<Machines />} />
           <Route path="machine/:id" element={<Card />} />
           <Route path="search" element={<Search />} />
+          <Route path="remove-part" element={<RemoveParts />} />
+          <Route path="read-parts" element={<ReadParts />} />
           <Route path="admin" element={<AdminRoutes />}>
             <Route path="metrics" element={<Metrics />} />
             <Route path="register" element={<Register />} />
             <Route path="export" element={<Export />} />
+            <Route path="add-parts" element={<AddParts />} />
           </Route>
         </Route>
         <Route path="register" element={<Register />} />

@@ -60,8 +60,8 @@ def login():
         current_app.logger.info(f"[LOGIN]: {user.first_name} {user.last_name} has logged in at {datetime.now(timezone.utc)}")
         return jsonify(success=True, message=f"Logged in as {user.first_name} {user.last_name[0]}.", user=user.serialize()), 200
     except Exception as e:
-        current_app.logger.error(f"[LOGIN ERROR]: There was an error when {user.first_name} {user.last_name} was logging in: {e}")
-        return jsonify(success=False, message=f"There was an error when {user.first_name} {user.last_name} was logging in: {e}"), 500
+        current_app.logger.error(f"[LOGIN ERROR]: There was an error when logging in: {e}")
+        return jsonify(success=False, message=f"There was an error when logging in: {e}"), 500
     
     
 @auth_bp.route("/logout", methods=["GET"])
