@@ -103,14 +103,7 @@ const RootLayout = () => {
               >
                 Parts List
               </Link>
-              <Link
-                to={"/remove-part"}
-                className={
-                  location.pathname === "/remove-part" ? "active-link" : ""
-                }
-              >
-                Use Parts
-              </Link>
+
               {user.is_admin && (
                 <>
                   <Link
