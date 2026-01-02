@@ -19,6 +19,7 @@ export const brands = {
   frigidaire_professional: "Fridgidaire Professional",
   ge: "GE",
   ge_profile: "GE Profile",
+  gibson: "Gibson",
   haier: "Haier",
   hisense: "Hisense",
   hotpoint: "Hotpoint",
