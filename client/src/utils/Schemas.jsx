@@ -38,6 +38,7 @@ export const brands = {
   samsung: "Samsung",
   speed_queen: "Speed Queen",
   tappan: "Tappan",
+  winia: "Winia",
   whirlpool: "Whirlpool",
   white_westinghouse: "White-Westinghouse",
 };
