@@ -62,8 +62,11 @@ const Metrics = () => {
       return;
     }
 
+    // Determine format based on window size
     const isMobile = window.matchMedia("(max-width: 500px)").matches;
     const format = isMobile ? "pdf" : "csv";
+
+    // Build API base
     const API_BASE =
       import.meta.env.MODE === "development"
         ? ""
@@ -82,16 +85,23 @@ const Metrics = () => {
       const blob = await response.blob();
       const filename = format === "csv" ? "user_report.csv" : "user_report.pdf";
       const blobURL = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = blobURL;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(blobURL);
+
+      if (format === "pdf") {
+        // PDF: open in new tab only
+        window.open(blobURL, "_blank");
+      } else {
+        // CSV: automatically download
+        const a = document.createElement("a");
+        a.href = blobURL;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(blobURL);
+      }
     } catch (error) {
       console.error("[EXPORT ERROR]: ", error);
-      toast.error("There was an error when exporting the report");
+      toast.error("There was an error exporting the report");
     }
   };
 
