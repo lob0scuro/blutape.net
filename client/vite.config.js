@@ -2,8 +2,6 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
-const SERVER = process.env.SERVER_URL;
-
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
@@ -47,7 +45,7 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         "/api": {
-          target: env.SERVER_URL,
+          target: env.VITE_SERVER_URL,
           changeOrigin: true,
           secure: false,
         },
