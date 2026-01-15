@@ -102,10 +102,13 @@ def export_user_report(id):
         return jsonify(success=False, message="No records in date range"), 404
     
     if fmt == "csv":
+        current_app.logger.info(f"[CSV EXPORT]: {current_user.first_name} {current_user.last_name} has exported {user.first_name} {user.last_name}'s machine data")
         return generate_user_report_csv(report)
     elif fmt == "pdf":
+        current_app.logger.info(f"[PDF EXPORT]: {current_user.first_name} {current_user.last_name} has exported {user.first_name} {user.last_name}'s machine data")
         return generate_user_report_pdf(report, start_date, end_date)
     else:
+        current_app.logger.info(f"[EXPORT ERROR]: There was an error when exporting machine data for {user.first_name} {user.last_name}")
         return jsonify(success=False, message="Invalid format request."), 400
         
     

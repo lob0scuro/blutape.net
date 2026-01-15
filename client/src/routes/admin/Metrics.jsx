@@ -56,12 +56,6 @@ const Metrics = () => {
     }
   }, [params.user_id]);
 
-  const handlePrint = useReactToPrint({
-    content: () => contentRef.current,
-    documentTitle: "User Metrics",
-    onAfterPrint: () => toast.success("Metrics Printed!"),
-  });
-
   const exportReport = () => {
     const isMobile = window.matchMedia("(max-width: 500px)").matches;
     const format = isMobile ? "pdf" : "csv";
