@@ -16,7 +16,6 @@ const Metrics = () => {
   const [params, setParams] = useState({
     start_date: getToday(),
     end_date: getToday(),
-    date_column: null,
     user_id: null,
   });
   const navigate = useNavigate();
@@ -62,6 +61,13 @@ const Metrics = () => {
     documentTitle: "User Metrics",
     onAfterPrint: () => toast.success("Metrics Printed!"),
   });
+
+  const exportReport = () => {
+    const isMobile = window.matchMedia("(max-width: 500px)").matches;
+    const format = isMobile ? "pdf" : "csv";
+    const url = `/api/export/user_report/${params.user_id}?start=${params.start_date}&end=${params.end_date}&format=${format}`;
+    window.open(url, "_blank");
+  };
 
   return (
     <div className={styles.metricsContainer}>
@@ -250,25 +256,9 @@ const Metrics = () => {
         </div>
       )}
       {metrics && (
-        <button
-          className={styles.printMetricsButton}
-          onClick={() => {
-            handlePrint();
-          }}
-          disabled
-        >
+        <button className={styles.printMetricsButton} onClick={exportReport}>
           <FontAwesomeIcon icon={faPrint} />
         </button>
-      )}
-      {metrics && users && (
-        <div style={{ display: "none" }}>
-          <UserMetricsPrintPage
-            start_date={params.start_date}
-            end_date={params.end_date}
-            metrics={metrics}
-            ref={contentRef}
-          />
-        </div>
       )}
     </div>
   );

@@ -128,6 +128,53 @@ class Machines(db.Model):
     technician = relationship("Users", back_populates="machines")
     notes = relationship("Notes", back_populates="machine", cascade="all, delete-orphan")
     
+    @classmethod
+    def metrics_report(cls, user_id, start_date, end_date):
+        """  
+        Return a list of machines.completed_on and machines.trashed_on between a given date range
+        """
+        
+        machines = cls.query.filter(
+            cls.technician_id == user_id,
+            db.or_(
+                cls.completed_on.between(start_date, end_date),
+                cls.trashed_on.between(start_date, end_date)
+            )
+        ).all()
+        
+        rows = []
+        
+        for m in machines:
+            if m.completed_on and start_date <= m.completed_on <= end_date:
+                rows.append({
+                    "brand": m.brand,
+                    "machine_type": m.type_of if m.type_of else None,
+                    "machine_style": m.style,
+                    "status": "completed",
+                    "date": m.completed_on.isoformat()
+                })
+                
+            if m.trashed_on and start_date <= m.trashed_on <= end_date:
+                rows.append({
+                    "brand": m.brand,
+                    "machine_type": m.type_of if m.type_of else None,
+                    "machine_style": m.style,
+                    "status": "trashed",
+                    "date": m.trashed_on.isoformat()
+                })
+        rows.sort(key=lambda r: r["date"])
+        
+        user = Users.query.get(user_id)
+        
+        
+        return {
+            "user": {
+                "id": user.id,
+                "name": f"{user.first_name} {user.last_name}"
+            },
+            "rows": rows
+        }
+    
     def serialize(self):
         return {
             "id": self.id,

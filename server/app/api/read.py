@@ -102,7 +102,7 @@ def user_metrics(id):
     if not user:
         return jsonify(success=False, message="User not found."), 404
     
-    statuses = request.args.getlist("stats") #?status=in_progress&status=completed ...
+    statuses = request.args.getlist("status") #?status=in_progress&status=completed ...
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
     date_column = request.args.get("date_column", "started_on")
