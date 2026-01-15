@@ -25,6 +25,7 @@ jobs:
         run: |
           cd client
           npm ci
+          SERVER_URL=https://blutape.net
           npm run build
         shell: bash
 
