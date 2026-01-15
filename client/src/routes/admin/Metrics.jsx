@@ -59,7 +59,8 @@ const Metrics = () => {
   const exportReport = () => {
     const isMobile = window.matchMedia("(max-width: 500px)").matches;
     const format = isMobile ? "pdf" : "csv";
-    const url = `/api/export/user_report/${params.user_id}?start=${params.start_date}&end=${params.end_date}&format=${format}`;
+    const API_BASE = import.meta.env.VITE_SERVER_URL || "";
+    const url = `${API_BASE}/api/export/user_report/${params.user_id}?start=${params.start_date}&end=${params.end_date}&format=${format}`;
     window.open(url, "_blank");
   };
 
