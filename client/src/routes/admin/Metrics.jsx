@@ -56,16 +56,28 @@ const Metrics = () => {
     }
   }, [params.user_id]);
 
-  const exportReport = () => {
+  const exportReport = async () => {
     const isMobile = window.matchMedia("(max-width: 500px)").matches;
     const format = isMobile ? "pdf" : "csv";
-    console.log(format);
     const API_BASE = import.meta.env.VITE_SERVER_URL || "";
 
     const url = `${API_BASE}/api/export/user_report/${params.user_id}?start=${params.start_date}&end=${params.end_date}&format=${format}`;
-    console.log(`[API_BASE]: ${API_BASE}`);
-    console.log(`[URL]: ${url}`);
-    window.open(url, "_blank");
+
+    const response = await fetch(url, { credentials: "include" });
+    if (!response.ok) {
+      const err = await response.json();
+      toast.error(err.message);
+      return;
+    }
+
+    const blob = await response.blob();
+    const filename = format === "csv" ? "user_report.csv" : "user_report.pdf";
+    const blobURL = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = blobURL;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(blobURL);
   };
 
   return (
