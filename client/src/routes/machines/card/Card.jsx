@@ -134,6 +134,7 @@ const Card = () => {
       icon: faPrint,
       className: styles.printMachine,
       onClick: () => printLabel(),
+      disabled: true,
     };
 
     return [printButton, ...(STATUS_ACTIONS[machine.status] || [])];
@@ -250,6 +251,13 @@ const Card = () => {
 
   return (
     <div>
+      <p className={styles.warning}>
+        **The label machine is down, until further notice.**
+      </p>
+      <p className={styles.warning}>
+        please note on the back of the machine that it has been entered into
+        bluTape until the printer is back online. Thank you!
+      </p>
       <div className={styles.cardHeader}>
         {getActions(machine, editing, setEditing, handleStatusChange).map(
           ({ icon, className, onClick, disabled }, idx) => (
