@@ -256,7 +256,7 @@ const Card = () => {
       </p>
       <p className={styles.warning}>
         please note on the back of the machine that it has been entered into
-        bluTape until the printer is back online. Thank you!
+        bluTape until the printer is back online. Thank you.
       </p>
       <div className={styles.cardHeader}>
         {getActions(machine, editing, setEditing, handleStatusChange).map(
