@@ -61,7 +61,11 @@ const RootLayout = () => {
     <>
       <header>
         <Link to={"/"}>
-          <img src={LOGO} alt="bluTape logo" className="header-logo" />
+          <img
+            src="/blutape-logo.svg"
+            alt="bluTape logo"
+            className="header-logo"
+          />
         </Link>
         {user && (
           <>

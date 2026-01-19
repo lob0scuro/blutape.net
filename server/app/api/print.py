@@ -94,7 +94,7 @@ def export_machines():
 #   NEED TO HOOK UP ONCE DEPLOYED
 #--------------------------
 PRINTER_IP = "100.71.48.104"
-ZEBRA_IP = "192.168.1.155"
+ZEBRA_IP = "192.168.1.153"
 PRINTER_PORT = 5000
 URL = "http://100.71.48.104:5000/print"
 
