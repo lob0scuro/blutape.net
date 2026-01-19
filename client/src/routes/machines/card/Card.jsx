@@ -134,7 +134,7 @@ const Card = () => {
       icon: faPrint,
       className: styles.printMachine,
       onClick: () => printLabel(),
-      disabled: true,
+      disabled: false,
     };
 
     return [printButton, ...(STATUS_ACTIONS[machine.status] || [])];
@@ -219,7 +219,7 @@ const Card = () => {
       method: editing.machine ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
-        editing.machine ? formData : { note: noteContent, machine_id: id }
+        editing.machine ? formData : { note: noteContent, machine_id: id },
       ),
     };
 
@@ -251,13 +251,13 @@ const Card = () => {
 
   return (
     <div>
-      <p className={styles.warning}>
+      {/* <p className={styles.warning}>
         **The label machine is down, until further notice.**
       </p>
       <p className={styles.warning}>
         please note on the back of the machine that it has been entered into
         bluTape until the printer is back online. Thank you.
-      </p>
+      </p> */}
       <div className={styles.cardHeader}>
         {getActions(machine, editing, setEditing, handleStatusChange).map(
           ({ icon, className, onClick, disabled }, idx) => (
@@ -269,13 +269,13 @@ const Card = () => {
             >
               <FontAwesomeIcon icon={icon} />
             </button>
-          )
+          ),
         )}
       </div>
       <div
         className={clsx(
           styles.statusDisplay,
-          machine.status ? STATUS_MAP[machine.status].className : ""
+          machine.status ? STATUS_MAP[machine.status].className : "",
         )}
       >
         {STATUS_MAP[machine.status]?.label || ""}
