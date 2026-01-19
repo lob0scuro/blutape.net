@@ -15,6 +15,10 @@ export default defineConfig(({ mode }) => {
       }),
       VitePWA({
         registerType: "autoUpdate",
+        workbox: {
+          skipWaiting: true,
+          clientsClaim: true,
+        },
         includeAssets: [
           "blu-logo-192.png",
           "blu-logo-512.png",

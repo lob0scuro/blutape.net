@@ -7,8 +7,9 @@ import { registerSW } from "virtual:pwa-register";
 
 const updateSW = registerSW({
   onNeedRefresh() {
-    console.log("New version available, reloading...");
-    updateSW(true);
+    if (confirm("New version available. Update now?")) {
+      updateSW(true);
+    }
   },
   onOfflineReady() {
     console.log("App ready to work offline.");
@@ -20,5 +21,5 @@ createRoot(document.getElementById("root")).render(
     <AuthContext>
       <App />
     </AuthContext>
-  </StrictMode>
+  </StrictMode>,
 );
