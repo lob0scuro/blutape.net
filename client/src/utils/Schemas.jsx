@@ -24,6 +24,7 @@ export const brands = {
   hisense: "Hisense",
   hotpoint: "Hotpoint",
   inglis: "Inglis",
+  insignia: "Insignia",
   jenn_air: "Jenn-Air",
   kenmore: "Kenmore",
   kitchenaid: "Kitchenaid",
