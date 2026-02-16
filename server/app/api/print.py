@@ -90,6 +90,25 @@ def export_machines():
     
     
 #--------------------------
+#   SOCKET TO PI
+#--------------------------
+PiIP = "100.71.48.104"
+PiPORT = 5555
+def send_to_pi(zpl:str) -> None:
+    payload = zpl.encode("utf-8")
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(5)
+        s.connect((PiIP, PiPORT))
+        s.sendall(payload)
+        s.shutdown(socket.SHUT_WR)
+        
+        try:
+            resp = s.recv(1024).decode("utf-8", "replace").strip()
+            current_app.logger.info(f"[PRINT GATEWAY]: {resp}")
+        except Exception:
+            pass
+    
+#--------------------------
 #   PRINT LABELS
 #   NEED TO HOOK UP ONCE DEPLOYED
 #--------------------------
@@ -137,17 +156,31 @@ def print_label():
             return jsonify(success=False, message="Missing required fields"), 400
         
         zpl = generate_ZPL_label(data)
+        send_to_pi(zpl)
         
-        response = requests.post(URL, data=zpl)
-        
-        if response.status_code == 200:
-            current_app.logger.info(f"[LABEL]: {current_user.first_name} {current_user.last_name} just printed a label, MachineID: {data.get("id")}")
-            return jsonify(success=True, message="Label sent to printer successfully"), 200
-        else:
-            current_app.logger.error(f"[LABEL ERROR]: Failed to send label to printer: {response.text}")
-            return jsonify(success=False, message=f"Failed to send label to printer: Error({response.text})"), 500
-             
+        current_app.logger.info(
+            f"[LABEL]: {current_user.first_name} {current_user.last_name} "
+            f"printed MachinID: {data.get('id')}"
+        )
+        return jsonify(success=True, message="Label sent to printer"), 200
+    except socket.timeout:
+        current_app.logger.error(f"[LABEL ERROR]: Print gateway timemout")
+        return jsonify(success=False, message="Printer gateway timeout"), 504
+    
     except Exception as e:
-        current_app.logger.error(f"[LABEL ERROR]: Error when sending ZPL: {e}")
-        return jsonify(success=False, message=f"Error when sending ZPL to printer: {e}"),500
+        current_app.logger.error(f"[LABEL ERROR]: {e}")
+        return jsonify(success=False, message=f"Error sending label: {e}"), 500
+        
+    #     response = requests.post(URL, data=zpl)
+        
+    #     if response.status_code == 200:
+    #         current_app.logger.info(f"[LABEL]: {current_user.first_name} {current_user.last_name} just printed a label, MachineID: {data.get("id")}")
+    #         return jsonify(success=True, message="Label sent to printer successfully"), 200
+    #     else:
+    #         current_app.logger.error(f"[LABEL ERROR]: Failed to send label to printer: {response.text}")
+    #         return jsonify(success=False, message=f"Failed to send label to printer: Error({response.text})"), 500
+             
+    # except Exception as e:
+    #     current_app.logger.error(f"[LABEL ERROR]: Error when sending ZPL: {e}")
+    #     return jsonify(success=False, message=f"Error when sending ZPL to printer: {e}"),500
     
