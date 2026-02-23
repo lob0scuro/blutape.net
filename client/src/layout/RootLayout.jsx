@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
+import Navbar from "../components/Navbar";
 
 const RootLayout = () => {
   const { user, setUser } = useAuth();
@@ -62,93 +63,17 @@ const RootLayout = () => {
       <header>
         <Link to={"/"}>
           <img
-            src="/blutape-logo.svg"
+            src="/blu-logo-512.png"
             alt="bluTape logo"
             className="header-logo"
           />
         </Link>
-        {user && (
-          <>
-            <FontAwesomeIcon
-              icon={menuOpen ? faBarsStaggered : faBars}
-              onClick={() => setMenuOpen(!menuOpen)}
-              ref={buttonRef}
-            />
-            <div
-              id="nav-links"
-              className={menuOpen ? "" : "hidden"}
-              ref={menuRef}
-            >
-              <Link
-                to={"/"}
-                className={location.pathname === "/" ? "active-link" : ""}
-              >
-                Home
-              </Link>
-              <Link
-                to={"/machines"}
-                className={
-                  location.pathname === "/machines" ? "active-link" : ""
-                }
-              >
-                Machines
-              </Link>
-              <Link
-                to={"/search"}
-                className={location.pathname === "/search" ? "active-link" : ""}
-              >
-                Search
-              </Link>
-              {user.is_admin && (
-                <>
-                  <Link
-                    to={"/admin/metrics"}
-                    className={
-                      location.pathname === "/admin/metrics"
-                        ? "active-link"
-                        : ""
-                    }
-                  >
-                    Metrics
-                  </Link>
-                  <Link
-                    to={"/admin/export"}
-                    className={
-                      location.pathname === "/admin/export" ? "active-link" : ""
-                    }
-                  >
-                    Export
-                  </Link>
-                  <Link
-                    to={"/admin/register"}
-                    className={
-                      location.pathname === "/admin/register"
-                        ? "active-link"
-                        : ""
-                    }
-                  >
-                    Register
-                  </Link>
-                </>
-              )}
-            </div>
-          </>
-        )}
       </header>
       <main>
         <Outlet />
       </main>
-      <footer>
-        {user && (
-          <button id="logout-button" onClick={logout}>
-            LOGOUT
-          </button>
-        )}
-        <p>
-          <b>bluTape/</b>
-        </p>
-        <p>Matt's Appliances, LLC</p>
-      </footer>
+      <Navbar />
+
       <Toaster position="bottom-right" reverseOrder={true} />
     </>
   );

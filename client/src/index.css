@@ -61,81 +61,11 @@ header img.header-logo {
   width: 8rem;
 }
 
-header svg {
-  font-size: 1.8rem;
-  color: var(--bannerBackground);
-  margin: 24px 24px 0 0;
-  cursor: pointer;
-}
-
-header div#nav-links {
-  opacity: 1;
-  transform: translateX(0);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  background-color: var(--bannerBackground);
-  border-radius: 8px 0 0 8px;
-
-  position: absolute;
-  right: 1px;
-  top: 8.2rem;
-
-  z-index: 1000;
-  transition: transform 0.25s ease, opacity 0.3s ease;
-  box-shadow: -4px 4px 16px rgba(0, 0, 0, 0.4);
-}
-header div#nav-links a {
-  font-size: 24px;
-  padding: 10px 16px 10px 24px;
-  color: var(--buttonSecondary);
-  border: 1px solid var(--buttonSecondary);
-  width: 100%;
-  text-align: end;
-  font-style: italic;
-}
-header div#nav-links a.active-link {
-  color: var(--textPrimary);
-  font-style: unset;
-}
-header div#nav-links a:first-child {
-  border-radius: 8px 0 0 0;
-}
-header div#nav-links a:last-child {
-  border-radius: 0 0 0 8px;
-}
-
-header div#nav-links.hidden {
-  transform: translateX(120%);
-  opacity: 0;
-}
-
 main {
   flex: 1;
-  padding: 1rem;
+  padding: 1rem 1rem 5rem 1rem;
   width: 100%;
   max-width: 1200px;
-}
-
-footer {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem 1rem;
-  background-color: var(--bannerBackground);
-  color: var(--textPrimary);
-}
-
-footer button#logout-button {
-  background-color: transparent;
-  box-shadow: unset;
-  color: var(--linkText);
-  margin-bottom: 12px;
-  border: none;
-  font-weight: 800;
-  text-decoration: underline;
-  font-size: 14px;
 }
 
 button {

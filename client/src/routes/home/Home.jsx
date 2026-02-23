@@ -9,12 +9,12 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [machineType, setMachineType] = useState("fridge");
+  const [machineType, setMachineType] = useState("fridge"); // category
   const [formData, setFormData] = useState({
     brand: "",
     model: "",
     serial: "",
-    style: "",
+    style: "", //form_factor
     color: "",
     condition: "",
     vendor: "",

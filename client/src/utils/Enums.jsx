@@ -1,16 +1,16 @@
 export const MACHINE_CONDITIONS = {
   NEW: "NEW",
   USED: "USED",
-  "Scratch and Dent": "Scratch and Dent",
+  scratch_and_dent: "Scratch and Dent",
 };
 
 export const VENDORS = {
   pasadena: "Pasadena (Miguel)",
   baton_rouge: "Baton Rouge",
   alexandria: "Alexandria",
-  stines_lc: "Stines Lake Charles",
-  stines_jn: "Stines Jennings",
+  stines: "Stines",
   scrappers: "Scrappers",
+  viking: "Viking",
   unknown: "Unknown",
 };
 
@@ -18,7 +18,7 @@ export const STATUS = {
   in_progress: "Active",
   completed: "Completed",
   trashed: "Trashed",
-  exported: "Exported",
+  archived: "Archived",
 };
 
 export const TYPES = {
@@ -33,9 +33,19 @@ export const TYPES = {
 };
 
 export const ROLES = {
-  office: "Office",
-  fridge_tech: "Fridge Tech",
-  washer_tech: "Washer Tech",
-  dryer_range_tech: "Dryer and Range Tech",
-  inventory: "Inventory",
+  technician: "Technician",
+  admin: "Admin",
+};
+
+export const APPLIANCE_CATEGORIES = {
+  refrigerator: "FRG",
+  freezer: "FZR",
+  washer: "WSH",
+  dryer: "DRY",
+  range: "RNG",
+  oven: "OVN",
+  microwave: "MWV",
+  water_heater: "WTR",
+  laundry_tower: "LTW",
+  dashwasher: "DWS",
 };

@@ -13,7 +13,6 @@ const Register = () => {
     email: "",
     password1: "",
     password2: "",
-    is_admin: false,
   });
 
   const handleChange = (e) => {
@@ -51,20 +50,6 @@ const Register = () => {
   return (
     <>
       <form onSubmit={handleSubmit} className={styles.registrationForm}>
-        <div>
-          <label htmlFor="is_admin">
-            Admin{" "}
-            <input
-              type="checkbox"
-              name="is_admin"
-              id="is_admin"
-              checked={formData.is_admin}
-              onChange={(e) =>
-                setFormData({ ...formData, is_admin: e.target.checked })
-              }
-            />
-          </label>
-        </div>
         <div>
           <label htmlFor="first_name">First Name</label>
           <input

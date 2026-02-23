@@ -108,6 +108,7 @@ ConditionEnumSA = SAEnum(
 
 class CategoryEnum(str, Enum):
     REFRIGERATOR = "refrigerator"
+    FREEZER = "freezer"
     WASHER = "washer"
     DRYER = "dryer"
     RANGE = "range"
