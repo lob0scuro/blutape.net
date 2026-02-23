@@ -1,7 +1,7 @@
 from flask import jsonify, request, Blueprint, current_app
 from app.extensions import db
 from flask_login import current_user
-from app.models import Machines, Notes, Users
+from app.models import Machine, MachineNote, User
 from datetime import datetime, timezone
 from flask_login import login_required, current_user
 import pandas as pd
@@ -20,7 +20,7 @@ print_bp = Blueprint("print", __name__)
 @print_bp.route("/export", methods=["GET"])
 @login_required
 def export_machines():
-    machines = Machines.query.filter_by(status="completed").all()
+    machines = Machine.query.filter_by(status="completed").all()
     
     if not machines:
         return jsonify(success=True, message="No machines found."), 404
@@ -29,8 +29,8 @@ def export_machines():
             "Brand": m.brand,
             "Model": m.model,
             "Serial": m.serial,
-            "Style": m.style,
-            "Type": m.type_of,
+            "Style": m.form_factor,
+            "Category": m.category,
             "Color": m.color,
             "Condition": m.condition,
             "Status": m.status,
@@ -128,7 +128,7 @@ def generate_ZPL_label(data):
     ^FO300,130^A0,35^FDBrand: {data["brand"]}^FS
     ^FO300,175^A0,35^FDModel: {data["model"]}^FS
     ^FO300,220^A0,35^FDSerial: {data["serial"]}^FS
-    ^FO300,265^A0,35^FDStyle: {data["style"]}^FS
+    ^FO300,265^A0,35^FDStyle: {data["form_factor"]}^FS
     ^FO300,310^A0,35^FDColor: {data["color"]}^FS
     ^XZ
     """
@@ -143,14 +143,14 @@ def print_label():
         "model": "Machine Model Number",
         "serial": "Serial number", 
         "brand": "Machine brand",
-        "style": "Machine style",
+        "form_factor": "Machine form factor",
         "color": "Machine color"
     }
     Generates ZPL and sends it to the Zebra printer via Raspberry Pi (Tailscale).
     """
     try:
         data = request.get_json()
-        required_fields = ["id", "model", "serial", "brand", "style", "color"]
+        required_fields = ["id", "model", "serial", "brand", "form_factor", "color"]
         
         if not data or any(field not in data for field in required_fields):
             return jsonify(success=False, message="Missing required fields"), 400
@@ -171,16 +171,4 @@ def print_label():
         current_app.logger.error(f"[LABEL ERROR]: {e}")
         return jsonify(success=False, message=f"Error sending label: {e}"), 500
         
-    #     response = requests.post(URL, data=zpl)
-        
-    #     if response.status_code == 200:
-    #         current_app.logger.info(f"[LABEL]: {current_user.first_name} {current_user.last_name} just printed a label, MachineID: {data.get("id")}")
-    #         return jsonify(success=True, message="Label sent to printer successfully"), 200
-    #     else:
-    #         current_app.logger.error(f"[LABEL ERROR]: Failed to send label to printer: {response.text}")
-    #         return jsonify(success=False, message=f"Failed to send label to printer: Error({response.text})"), 500
-             
-    # except Exception as e:
-    #     current_app.logger.error(f"[LABEL ERROR]: Error when sending ZPL: {e}")
-    #     return jsonify(success=False, message=f"Error when sending ZPL to printer: {e}"),500
     

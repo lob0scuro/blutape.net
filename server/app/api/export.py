@@ -1,6 +1,6 @@
 from flask import jsonify, current_app, Blueprint, request, Response, render_template
 from app.extensions import db
-from app.models import Machines, Users
+from app.models import Machine, User
 from flask_login import login_required, current_user
 import pandas as pd
 from io import BytesIO, StringIO
@@ -82,7 +82,7 @@ def generate_user_report_pdf(report, start_date, end_date):
 @export_bp.route("/user_report/<int:id>", methods=["GET"])
 @login_required
 def export_user_report(id):
-    user = Users.query.get(id)
+    user = User.query.get(id)
     if not user:
         return jsonify(success=False, message="User not found"), 404
     
@@ -96,7 +96,7 @@ def export_user_report(id):
     except (ValueError, TypeError):
         return jsonify(success=False, message="Invalid date format, use YYYY-MM-DD"), 400
     
-    report = Machines.metrics_report(id, start_date, end_date)
+    report = Machine.metrics_report(id, start_date, end_date)
     
     if not report["rows"]:
         return jsonify(success=False, message="No records in date range"), 404

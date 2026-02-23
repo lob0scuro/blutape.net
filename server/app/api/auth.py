@@ -1,37 +1,56 @@
 from flask import Blueprint, jsonify, request, session, current_app
-from app.extensions import db, bcrypt, serializer
-from ..models import Users
+from app.extensions import db, bcrypt
+from app.models import User
 from flask_login import login_user, logout_user, current_user, login_required
-from flask_mailman import EmailMessage
-from itsdangerous import BadSignature, SignatureExpired
 from datetime import datetime, timezone
 
 auth_bp = Blueprint("auth", __name__)
 
 
-@auth_bp.route("/register", methods=["POST"])
+@auth_bp.post("/register")
 def register():
     try:
         data = request.get_json()
         if not data:
             return jsonify(success=False, message="No payload in request"), 400
         
-        first_name = data.get("first_name")
-        last_name = data.get("last_name")
-        role = data.get("role")
-        is_admin = data.get("is_admin")
-        email = data.get("email")
-        password1 = data.get("password1")
-        password2 = data.get("password2")
+        first_name = (data.get("first_name") or "").strip()
+        last_name = (data.get("last_name") or "").strip()
+        email = (data.get("email") or "").strip().lower()
+        role = (data.get("role") or "").strip().lower()
+        password1 = data.get("password1") or ""
+        password2 = data.get("password2") or ""
+
+        missing = []
+        if not first_name:
+            missing.append("first_name")
+        if not last_name:
+            missing.append("last_name")
+        if not email:
+            missing.append("email")
+        if not role:
+            missing.append("role")
+        if not password1:
+            missing.append("password1")
+        if not password2:
+            missing.append("password2")
+        if missing:
+            return jsonify(success=False, message=f"Missing required fields: {', '.join(missing)}"), 400
         
-        check_email = Users.query.filter_by(email=email).first()
+        check_email = db.session.query(User).filter_by(email=email).first()
         if check_email:
             return jsonify(success=False, message="User already exists with this email. If you forgot your password please request a reset link."), 400
         
         if password1 != password2:
             return jsonify(success=False, message="Passwords do not match, please chack inputs and try again."), 403
         
-        new_user = Users(first_name=first_name.capitalize(), last_name=last_name.capitalize(), role=role, is_admin=is_admin, email=email, password_hash=bcrypt.generate_password_hash(password1).decode("utf-8"))
+        new_user = User(
+            first_name=first_name.capitalize(),
+            last_name=last_name.capitalize(),
+            role=role,
+            email=email,
+            password_hash=bcrypt.generate_password_hash(password1).decode("utf-8"),
+        )
         
         db.session.add(new_user)
         db.session.commit()
@@ -40,16 +59,22 @@ def register():
     except Exception as e:
         current_app.logger.error(f"[REGISTRATION ERROR]: Error when adding user: {e}")
         db.session.rollback()
-        return jsonify(success=False, message=f"Error when adding user: {e}"), 500
+        return jsonify(success=False, message="Error when adding user"), 500
     
     
-@auth_bp.route("/login", methods=["POST"])
+@auth_bp.post("/login")
 def login():
     try:
         data = request.get_json()
-        email = data.get("email")
-        password = data.get("password")
-        user = Users.query.filter_by(email=email).first()
+        if not data:
+            return jsonify(success=False, message="No payload in request"), 400
+
+        email = (data.get("email") or "").strip().lower()
+        password = data.get("password") or ""
+        if not email or not password:
+            return jsonify(success=False, message="email and password are required"), 400
+
+        user = db.session.query(User).filter_by(email=email).first()
         if not user:
             return jsonify(success=False, message="Invalid credentials, please check inputs and try again."), 400
         if not bcrypt.check_password_hash(user.password_hash, password):
@@ -60,19 +85,20 @@ def login():
         current_app.logger.info(f"[LOGIN]: {user.first_name} {user.last_name} has logged in at {datetime.now(timezone.utc)}")
         return jsonify(success=True, message=f"Logged in as {user.first_name} {user.last_name[0]}.", user=user.serialize()), 200
     except Exception as e:
-        current_app.logger.error(f"[LOGIN ERROR]: There was an error when {user.first_name} {user.last_name} was logging in: {e}")
-        return jsonify(success=False, message=f"There was an error when {user.first_name} {user.last_name} was logging in: {e}"), 500
+        current_app.logger.error(f"[LOGIN ERROR]: {e}")
+        return jsonify(success=False, message="There was an error when logging in"), 500
     
     
 @auth_bp.route("/logout", methods=["GET"])
+@login_required
 def logout():
     try:
         current_app.logger.info(f"[LOGOUT]: {current_user.first_name} {current_user.last_name[0]}. has logged out.")
         logout_user()
         return jsonify(success=True, message="User logged out."), 200
     except Exception as e:
-        current_app.logger.error(f"[LOGOUT ERROR]: There was an error when {current_user.first_name} {current_user.last_name} was logging out: {e}")
-        return jsonify(success=False, message=f"There was an error when {current_user.first_name} {current_user.last_name} was logging out: {e}"), 500
+        current_app.logger.error(f"[LOGOUT ERROR]: {e}")
+        return jsonify(success=False, message="There was an error when logging out"), 500
     
     
 @auth_bp.route("/hydrate", methods=['GET'])
