@@ -72,7 +72,7 @@ const RootLayout = () => {
       <main>
         <Outlet />
       </main>
-      <Navbar />
+      {user && <Navbar />}
 
       <Toaster position="bottom-right" reverseOrder={true} />
     </>
