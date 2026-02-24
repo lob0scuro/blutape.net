@@ -7,6 +7,7 @@ export const MACHINE_CONDITIONS = {
 export const VENDORS = {
   pasadena: "Pasadena (Miguel)",
   baton_rouge: "Baton Rouge",
+  college_station: "College Station",
   alexandria: "Alexandria",
   stines_lc: "Stines Lake Charles",
   stines_jn: "Stines Jennings",
