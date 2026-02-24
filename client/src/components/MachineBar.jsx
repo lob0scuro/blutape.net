@@ -1,19 +1,22 @@
 import styles from "./MachineBar.module.css";
 import { APPLIANCE_CATEGORIES } from "../utils/Enums";
 
-const MachineBar = ({ machineType, setMachineType }) => {
+const MachineBar = ({ applianceCategory, setApplianceCategory }) => {
   return (
-    <div className={styles.machineBarButtonBlock}>
+    <select
+      name="appliance_category"
+      id="appliance_category"
+      className={styles.applianceCat}
+      value={applianceCategory}
+      onChange={(e) => setApplianceCategory(e.target.value)}
+    >
+      <option value="">--select appliance--</option>
       {Object.entries(APPLIANCE_CATEGORIES).map(([value, label], index) => (
-        <button
-          key={index}
-          onClick={() => setMachineType(value)}
-          className={machineType === value ? styles.activeButton : ""}
-        >
+        <option value={value} key={index}>
           {label}
-        </button>
+        </option>
       ))}
-    </div>
+    </select>
   );
 };
 

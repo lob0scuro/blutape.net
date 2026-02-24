@@ -30,7 +30,11 @@ class WorkOrder(Base):
             "id": self.id,
             "machine_id": self.machine_id,
             "initiated_on": self.initiated_on.strftime("%Y-%m-%d"),
-            "initiated_by": self.initiated_by,
+            "initiator": {
+                "id": self.initiator.id,
+                "first_name": self.initiator.first_name,
+                "last_name": self.initiator.last_name,
+            },
             "current_status": str(self.current_status),
             "closed_on": self.closed_on.strftime("%Y-%m-%d") if self.closed_on
              else None,

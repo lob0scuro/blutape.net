@@ -1,0 +1,39 @@
+.profileContainer {
+  width: min(560px, 92%);
+  margin: 1.5rem auto;
+}
+
+.profileContainer h1 {
+  margin: 0 0 0.8rem 0;
+}
+
+.profileForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem;
+  border: 1px solid var(--buttonPrimary);
+  border-radius: 10px;
+  background-color: color-mix(in oklab, var(--bannerBackground), #000 12%);
+  color: var(--textPrimary);
+}
+
+.profileForm label {
+  font-size: 0.86rem;
+  opacity: 0.9;
+}
+
+.profileForm input {
+  height: 36px;
+  border: 1px solid var(--buttonPrimary);
+  border-radius: 8px;
+  padding: 0 0.55rem;
+  font-size: 0.95rem;
+  margin-bottom: 0.55rem;
+}
+
+.profileForm button {
+  margin-top: 1rem;
+  font-size: 2rem;
+  border-radius: 8px;
+}

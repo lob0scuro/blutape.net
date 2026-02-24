@@ -2,7 +2,7 @@ from datetime import date
 
 from flask import Blueprint, current_app, jsonify, request
 from flask_login import current_user, login_required
-from sqlalchemy import func, select
+from sqlalchemy import func, select, case
 from sqlalchemy.orm import joinedload
 
 from app.extensions import db
@@ -95,7 +95,11 @@ def get_machines():
         query = (
             db.session.query(Machine, WorkOrder)
             .outerjoin(WorkOrder, WorkOrder.id == latest_work_order_id)
-            .order_by(WorkOrder.id.desc().nullslast(), Machine.id.desc())
+            .order_by(
+                case((WorkOrder.id.is_(None), 1), else_=0),
+                WorkOrder.id.desc(),
+                Machine.id.desc(),
+            )
         )
 
         if user_id:

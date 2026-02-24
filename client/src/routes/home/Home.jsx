@@ -1,20 +1,24 @@
 import MachineBar from "../../components/MachineBar";
 import styles from "./Home.module.css";
-import React, { useState } from "react";
-import { brands, colors, machineStyles } from "../../utils/Schemas";
-import { MACHINE_CONDITIONS, STATUS, VENDORS } from "../../utils/Enums";
-import { dateForDB } from "../../utils/Tools";
+import { useState } from "react";
+import { brands, colors } from "../../utils/Schemas";
+import {
+  MACHINE_CONDITIONS,
+  VENDORS,
+  FORM_FACTOR,
+} from "../../utils/Enums";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { requestJson } from "../../utils/api";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [machineType, setMachineType] = useState("fridge"); // category
+  const [applianceCategory, setApplianceCategory] = useState(""); // category
   const [formData, setFormData] = useState({
     brand: "",
     model: "",
     serial: "",
-    style: "", //form_factor
+    form_factor: "",
     color: "",
     condition: "",
     vendor: "",
@@ -38,28 +42,19 @@ const Home = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (!confirm("Submit?")) return;
     try {
-      const response = await fetch(`/api/create/add_machine`, {
+      const data = await requestJson(`/api/create/machine`, {
         method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...formData, type_of: machineType }),
+        body: { ...formData, category: applianceCategory },
       });
-
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error(data.message);
-      }
       toast.success(data.message);
       setFormData({
         brand: "",
         model: "",
         serial: "",
         color: "",
-        style: "",
+        form_factor: "",
         condition: "",
         vendor: "",
       });
@@ -73,8 +68,13 @@ const Home = () => {
   return (
     <>
       <div className={styles.homePageHeader}>
-        <MachineBar machineType={machineType} setMachineType={setMachineType} />
+        <MachineBar
+          applianceCategory={applianceCategory}
+          setApplianceCategory={setApplianceCategory}
+        />
       </div>
+      <br />
+      <hr />
       <form className={styles.machineFormHome} onSubmit={handleSubmit}>
         <div>
           <label htmlFor="model">Model No.</label>
@@ -104,20 +104,20 @@ const Home = () => {
             onChange={handleChange}
             required
           >
-            <option value="--Select a brand--">--Select a brand--</option>
+            <option value="">--Select a brand--</option>
             {renderOptions(brands)}
           </select>
         </div>
         <div>
-          <label htmlFor="style">Style</label>
+          <label htmlFor="form_factor">Style</label>
           <select
-            name="style"
-            value={formData.style}
+            name="form_factor"
+            value={formData.form_factor}
             onChange={handleChange}
             required
           >
-            <option value="">--select a style</option>
-            {renderOptions(machineStyles[machineType])}
+            <option value="">--select a style--</option>
+            {renderOptions(FORM_FACTOR(applianceCategory))}
           </select>
         </div>
         <div>

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Route,
   RouterProvider,
@@ -15,7 +14,7 @@ import Machines from "./routes/machines/table/Machines";
 import Card from "./routes/machines/card/Card";
 import Search from "./routes/search/Search";
 import Metrics from "./routes/admin/Metrics";
-import Export from "./routes/admin/export/Export";
+import Profile from "./routes/profile/Profile";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -26,10 +25,10 @@ const App = () => {
           <Route path="machines" element={<Machines />} />
           <Route path="machine/:id" element={<Card />} />
           <Route path="search" element={<Search />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="admin" element={<AdminRoutes />}>
             <Route path="metrics" element={<Metrics />} />
             <Route path="register" element={<Register />} />
-            <Route path="export" element={<Export />} />
           </Route>
         </Route>
         <Route path="register" element={<Register />} />

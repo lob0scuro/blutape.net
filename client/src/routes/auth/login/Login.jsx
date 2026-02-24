@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import { requestJson } from "../../../utils/api";
 
 const Login = () => {
   const { setUser } = useAuth();
@@ -14,18 +15,10 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("/api/auth/login", {
+      const data = await requestJson("/api/auth/login", {
         method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+        body: { email, password },
       });
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error(data.message);
-      }
       setUser(data.user);
       toast.success(data.message);
       navigate("/");

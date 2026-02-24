@@ -1,31 +1,24 @@
 .statusBar {
+  width: 100%;
+  margin: 0;
   display: flex;
-  box-shadow: -1px 1px 6px #000;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.statusLabel {
+  font-size: 0.76rem;
+  opacity: 0.9;
+}
+
+.statusSelect {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--buttonPrimary);
   border-radius: 8px;
-  width: 105%;
-  margin: 1rem auto;
-}
-
-.statusBar button {
-  font-size: 100%;
-  padding: 12px 10px;
-  border: 2px solid var(--bannerBackground);
-  box-shadow: unset;
-  width: 32%;
-  text-align: center;
-}
-
-.statusBar button:first-child {
-  border-radius: 8px 0 0 8px;
-}
-.statusBar button:last-child {
-  border-radius: 0 8px 8px 0;
-}
-
-.statusBar button.activeButton {
-  background-color: var(--buttonPrimary);
-  color: var(--linkText);
-  font-weight: 700;
-  box-shadow: inset 1px -1px 4px var(--linkText),
-    inset -2px 1px 6px var(--linkText);
+  padding: 0 0.5rem;
+  font-size: 0.95rem;
+  background-color: var(--bannerBackground);
+  color: var(--textPrimary);
+  box-shadow: -1px 1px 4px #0006;
 }

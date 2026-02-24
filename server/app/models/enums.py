@@ -1,6 +1,22 @@
 from enum import Enum
 from sqlalchemy import Enum as SAEnum
 
+
+def _enum_values(enum_cls):
+    return [member.value for member in enum_cls]
+
+
+def _enum_column(enum_cls, name: str):
+    return SAEnum(
+        enum_cls,
+        name=name,
+        native_enum=False,
+        validate_strings=True,
+        values_callable=_enum_values,
+        length=max(len(member.value) for member in enum_cls),
+    )
+
+
 class RoleEnum(str, Enum):
     TECHNICIAN = "technician"
     ADMIN = "admin"
@@ -8,12 +24,7 @@ class RoleEnum(str, Enum):
     def __str__(self):
         return self.value
     
-RoleEnumSA = SAEnum(
-    RoleEnum,
-    name="role_enum",
-    native_enum=False,
-    validate_strings=True
-)
+RoleEnumSA = _enum_column(RoleEnum, "role_enum")
 
 
 class StatusEnum(str, Enum):
@@ -25,12 +36,7 @@ class StatusEnum(str, Enum):
     def __str__(self):
         return self.value
     
-StatusEnumSA = SAEnum(
-    StatusEnum,
-    name="status_enum",
-    native_enum=False,
-    validate_strings=True
-)
+StatusEnumSA = _enum_column(StatusEnum, "status_enum")
 
 
 class EventEnum(str, Enum):
@@ -44,12 +50,7 @@ class EventEnum(str, Enum):
     def __str__(self):
         return self.value
     
-EventEnumSA = SAEnum(
-    EventEnum,
-    name="event_enum",
-    native_enum=False,
-    validate_strings=True
-)
+EventEnumSA = _enum_column(EventEnum, "event_enum")
 
 
 class EventReasonEnum(str, Enum):
@@ -61,17 +62,13 @@ class EventReasonEnum(str, Enum):
         return self.value
     
 
-EventReasonEnumSA = SAEnum(
-    EventReasonEnum,
-    name="event_reason_enum",
-    native_enum=False,
-    validate_strings=True
-)
+EventReasonEnumSA = _enum_column(EventReasonEnum, "event_reason_enum")
 
 
 class VendorEnum(str, Enum):
     PASADENA = "pasadena"
     BATON_ROUGE = "baton_rouge"
+    COLLEGE_STATION = "college_station"
     ALEXANDRIA = "alexandria"
     STINES = "stines"
     SCRAPPERS = "scrappers"
@@ -82,12 +79,7 @@ class VendorEnum(str, Enum):
         return self.value
     
     
-VendorEnumSA = SAEnum(
-    VendorEnum,
-    name="vendor_enum",
-    native_enum=False,
-    validate_strings=True
-)
+VendorEnumSA = _enum_column(VendorEnum, "vendor_enum")
 
 
 class ConditionEnum(str, Enum):
@@ -98,12 +90,7 @@ class ConditionEnum(str, Enum):
     def __str__(self):
         return self.value
     
-ConditionEnumSA = SAEnum(
-    ConditionEnum,
-    name="condition_enum",
-    native_enum=False,
-    validate_strings=True
-)
+ConditionEnumSA = _enum_column(ConditionEnum, "condition_enum")
 
 
 class CategoryEnum(str, Enum):
@@ -121,9 +108,4 @@ class CategoryEnum(str, Enum):
     def __str__(self):
         return self.value
     
-CategoryEnumSA = SAEnum(
-    CategoryEnum,
-    name="type_enum",
-    native_enum=False,
-    validate_strings=True
-)
+CategoryEnumSA = _enum_column(CategoryEnum, "type_enum")

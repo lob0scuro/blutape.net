@@ -31,6 +31,14 @@ class Machine(Base):
     work_order_events = relationship("WorkOrderEvent", back_populates="machine")
     notes = relationship("MachineNote", back_populates="machine")
     
+    @property
+    def current_status(self):
+        if not self.work_orders:
+            return None
+        latest_work_order = max(self.work_orders, key=lambda wo: wo.id)
+        return latest_work_order.current_status
+        
+    
     
     def serialize(self) -> dict:
         return {
@@ -42,6 +50,7 @@ class Machine(Base):
             "form_factor": self.form_factor,
             "color": self.color,
             "condition": str(self.condition),
-            "vendor": str(self.vendor)
+            "vendor": str(self.vendor),
+            "current_status": str(self.current_status) if self.current_status else None
         }
     

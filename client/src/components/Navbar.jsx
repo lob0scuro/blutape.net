@@ -6,11 +6,14 @@ import {
   faHouse,
   faList,
   faMagnifyingGlass,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
   const navi = useNavigate();
   const loc = useLocation();
+  const { user } = useAuth();
 
   const goTo = (path) => {
     navi(path);
@@ -18,11 +21,11 @@ const Navbar = () => {
 
   const PATHS = {
     "/": faHouse,
-    "/search": faMagnifyingGlass,
     "/machines": faList,
-    "/admin/metrics": faChartSimple,
+    "/search": faMagnifyingGlass,
+    "/profile": faUser,
+    ...(user?.role === "admin" ? { "/admin/metrics": faChartSimple } : {}),
   };
-
   return (
     <div className={styles.navbar}>
       {Object.entries(PATHS).map(([path, icon], index) => (

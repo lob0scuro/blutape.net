@@ -1,4 +1,5 @@
 import React, { useContext, createContext, useEffect, useState } from "react";
+import { requestJson } from "../utils/api";
 
 const UserContext = createContext();
 
@@ -9,16 +10,8 @@ export const AuthContext = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch("/api/auth/hydrate", {
-          method: "GET",
-          credentials: "include",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-        } else {
-          setUser(null);
-        }
+        const data = await requestJson("/api/auth/hydrate");
+        setUser(data.user);
       } catch (error) {
         console.error("Error when fetching user: ", error);
         setUser(null);
@@ -36,4 +29,5 @@ export const AuthContext = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(UserContext);

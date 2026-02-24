@@ -27,9 +27,9 @@ def add_new_machine():
         return jsonify(success=False, message="Machine already exists in database."), 409
     
     try:
-        category = CategoryEnum(data.get("category", "").strip())
-        condition = ConditionEnum(data.get("condition", "").strip())
-        vendor = VendorEnum(data.get("vendor", "").strip())
+        category = CategoryEnum((data.get("category") or "").strip().lower())
+        condition = ConditionEnum((data.get("condition") or "").strip().lower())
+        vendor = VendorEnum((data.get("vendor") or "").strip().lower())
     except (KeyError, ValueError):
         return jsonify(success=False, message="Bad data in one or more [category, condition, vendor]"), 400
     

@@ -1,6 +1,6 @@
 from flask import jsonify, request, Blueprint, current_app
 from app.extensions import db
-from flask_login import current_user
+from flask_login import current_user, login_required
 from app.models import (
     Machine, 
     User, 
@@ -30,6 +30,49 @@ def _status_to_event_type(old_status: StatusEnum, new_status: StatusEnum) -> Eve
     if new_status == StatusEnum.IN_PROGRESS and old_status in {StatusEnum.COMPLETED, StatusEnum.TRASHED}:
         return EventEnum.REOPENED
     return EventEnum.INITIATED
+
+
+@update_bp.patch("/user/me")
+@login_required
+def update_current_user():
+    data = request.get_json() or {}
+    if not data:
+        return jsonify(success=False, message="No payload in request"), 400
+
+    first_name = (data.get("first_name") or "").strip()
+    last_name = (data.get("last_name") or "").strip()
+    email = (data.get("email") or "").strip().lower()
+
+    if not first_name:
+        return jsonify(success=False, message="first_name is required"), 400
+    if not last_name:
+        return jsonify(success=False, message="last_name is required"), 400
+    if not email:
+        return jsonify(success=False, message="email is required"), 400
+
+    duplicate = (
+        db.session.query(User)
+        .filter(User.email == email, User.id != current_user.id)
+        .first()
+    )
+    if duplicate:
+        return jsonify(success=False, message="Email already in use"), 409
+
+    current_user.first_name = first_name.capitalize()
+    current_user.last_name = last_name.capitalize()
+    current_user.email = email
+
+    try:
+        db.session.commit()
+        return jsonify(
+            success=True,
+            message="Profile updated",
+            user=current_user.serialize(),
+        ), 200
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"[USER UPDATE ERROR]: {e}")
+        return jsonify(success=False, message="Failed to update profile"), 500
 
 
 @update_bp.patch("/work_order/<int:work_order_id>/status")
