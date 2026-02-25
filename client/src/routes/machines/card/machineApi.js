@@ -4,7 +4,14 @@ export const getMachine = async (id) => {
   return requestJson(`/api/read/machine/${id}`);
 };
 
-export const printMachineLabel = async ({ id, model, serial, brand, form_factor, color }) => {
+export const printMachineLabel = async ({
+  id,
+  model,
+  serial,
+  brand,
+  form_factor,
+  color,
+}) => {
   return requestJson("/api/print/label", {
     method: "POST",
     body: {
@@ -33,8 +40,9 @@ export const updateMachine = async (id, formData) => {
 };
 
 export const addMachineNote = async (id, note) => {
-  return requestJson("/api/create/add_note", {
+  return requestJson(`/api/create/note/${id}`, {
     method: "POST",
-    body: { note, machine_id: id },
+
+    body: { content: note },
   });
 };

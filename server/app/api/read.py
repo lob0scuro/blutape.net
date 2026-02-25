@@ -21,8 +21,8 @@ def _parse_iso_date(value: str | None):
         return None
 
 
-def _build_machine_payload(machine: Machine, latest_work_order: WorkOrder | None):
-    payload = machine.serialize()
+def _build_machine_payload(machine: Machine, latest_work_order: WorkOrder | None, include_machine_notes: bool = False):
+    payload = machine.serialize(include_notes=include_machine_notes)
     payload["latest_work_order"] = latest_work_order.serialize() if latest_work_order else None
     return payload
 
@@ -71,7 +71,7 @@ def get_machine(id):
         if machine.work_orders:
             latest_work_order = max(machine.work_orders, key=lambda wo: wo.id)
 
-        return jsonify(success=True, machine=_build_machine_payload(machine, latest_work_order)), 200
+        return jsonify(success=True, machine=_build_machine_payload(machine, latest_work_order, include_machine_notes=True)), 200
     except Exception as e:
         current_app.logger.error(f"[MACHINE QUERY ERROR]: {e}")
         return jsonify(success=False, message=f"Something went wrong when querying for machine with id {id}"), 500

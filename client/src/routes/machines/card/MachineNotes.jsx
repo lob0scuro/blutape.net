@@ -32,6 +32,7 @@ const MachineNotes = ({
                 name="note"
                 value={noteContent}
                 onChange={(e) => setNoteContent(e.target.value)}
+                autoFocus
               ></textarea>
               <button type="submit">Submit</button>
             </form>
@@ -40,12 +41,14 @@ const MachineNotes = ({
         {notes
           ?.slice()
           .reverse()
-          .map(({ id, content, date, author_name }) => (
+          .map(({ id, content, added_on, technician, machine_id }) => (
             <li key={id}>
               <p>{content}</p>
               <div>
-                <p>{author_name}</p>
-                <p>{formatDate(date)}</p>
+                <p>
+                  {technician.first_name} {technician.last_name[0]}.
+                </p>
+                <p>{formatDate(added_on)}</p>
               </div>
             </li>
           ))}

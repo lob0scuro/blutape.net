@@ -94,7 +94,7 @@ def add_note_to_machine(machine_id):
     
     data = request.get_json()
     if not data:
-        return jsonify(success=False, message="No data i payload"), 400
+        return jsonify(success=False, message="No data in payload"), 400
     
     note = MachineNote(
         content=(data.get("content") or ""),

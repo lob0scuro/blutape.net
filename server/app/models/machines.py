@@ -40,7 +40,7 @@ class Machine(Base):
         
     
     
-    def serialize(self) -> dict:
+    def serialize(self, include_notes=False) -> dict:
         return {
             "id": self.id,
             "brand": self.brand,
@@ -51,6 +51,16 @@ class Machine(Base):
             "color": self.color,
             "condition": str(self.condition),
             "vendor": str(self.vendor),
-            "current_status": str(self.current_status) if self.current_status else None
+            "current_status": str(self.current_status) if self.current_status else None,
+            "notes": [{
+                "id": n.id,
+                "content": n.content,
+                "added_on": n.added_on,
+                "machine_id": n.machine_id,
+                "technician": {
+                    "first_name": n.technician.first_name,
+                    "last_name": n.technician.last_name,
+                }
+            } for n in self.notes] if include_notes else None
         }
     
