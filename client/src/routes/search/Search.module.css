@@ -24,7 +24,8 @@
 
 .searchToggler button.activeButton {
   color: var(--textPrimary);
-  box-shadow: inset 1px 1px 4px var(--bannerBackground),
+  box-shadow:
+    inset 1px 1px 4px var(--bannerBackground),
     inset -1px -1px 3px var(--bannerBackground);
 }
 
@@ -41,6 +42,9 @@
 }
 .serialSearchInput input {
   width: 80%;
+  font-size: 1.5rem;
+  border-radius: 8px;
+  padding: 4px;
 }
 
 .searchCamera {

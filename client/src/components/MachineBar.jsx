@@ -1,35 +1,26 @@
 import styles from "./MachineBar.module.css";
-import React from "react";
+import { APPLIANCE_CATEGORIES } from "../utils/Enums";
 
-const lala = [
-  "fridge",
-  "washer",
-  "dryer",
-  "range",
-  "microwave",
-  "water_heater",
-  "stackable",
-  "dishwasher",
-];
-const Machines = [
-  { value: "fridge", label: "Fridge" },
-  { value: "washer", label: "Washer" },
-  { value: "dryer", label: "Dryer" },
-  { value: "range", label: "Range" },
-];
-
-const MachineBar = ({ machineType, setMachineType }) => {
+const MachineBar = ({ applianceCategory, setApplianceCategory }) => {
   return (
-    <div className={styles.machineBarButtonBlock}>
-      {Machines.map(({ value, label }, index) => (
-        <button
-          key={index}
-          onClick={() => setMachineType(value)}
-          className={machineType === value ? styles.activeButton : ""}
-        >
-          {label}
-        </button>
-      ))}
+    <div className={styles.applianceCatGroup}>
+      <label className={styles.applianceCatLabel} htmlFor="appliance_category">
+        Appliance Category
+      </label>
+      <select
+        name="appliance_category"
+        id="appliance_category"
+        className={styles.applianceCat}
+        value={applianceCategory}
+        onChange={(e) => setApplianceCategory(e.target.value)}
+      >
+        <option value="">--select appliance--</option>
+        {Object.entries(APPLIANCE_CATEGORIES).map(([value, label], index) => (
+          <option value={value} key={index}>
+            {label}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };

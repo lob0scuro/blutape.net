@@ -1,7 +1,7 @@
 from flask import Flask
 from config import Config
 from .extensions import db, migrate, bcrypt, cors, login_manager, session, mail
-from .models import Users
+from .models import User
 from .logging_config import LoggingConfig
 from itsdangerous import URLSafeTimedSerializer
 
@@ -31,6 +31,6 @@ def create_app(config_class=Config):
     
     @login_manager.user_loader
     def load_user(id):
-        return Users.query.get(id)
+        return db.session.get(User, id)
     
     return app

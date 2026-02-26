@@ -5,39 +5,102 @@
 }
 
 .machineTableHeader {
-  margin: 1rem auto;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0.75rem auto 0.5rem;
 }
 
-.machineTableHeader > div.tableController {
+.controlCard {
+  border: 2px solid var(--linkText);
+  border-radius: 12px;
+  background: var(--bannerBackground);
+  box-shadow: -1px 1px 6px var(--backgroundDark);
+  padding: 0.8rem;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.8rem;
 }
-.machineTableHeader > div.tableController > div.paginator {
+
+.tableController {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: var(--textPrimary);
 }
-.machineTableHeader > div.tableController > div.paginator button {
-  background-color: transparent;
-  box-shadow: unset;
-  padding: 4px 6px;
-  border-radius: 4px;
-  background-color: var(--buttonPrimary);
+
+.controlField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
-.machineTableHeader > div.tableController > div.paginator button:disabled {
-  background-color: transparent;
-  color: var(--linkText);
+
+.controlLabel,
+.pagerLabel {
+  font-size: 0.76rem;
+  opacity: 0.9;
+  font-weight: 600;
+  color: var(--textPrimary);
 }
 
 .machineTableUserSelect {
-  width: fit-content;
-  font-size: 14px;
-  height: 40px;
-  background-color: transparent;
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--buttonPrimary);
+  border-radius: 8px;
+  padding: 0 0.5rem;
+  font-size: 0.95rem;
+  background-color: var(--bannerBackground);
+  color: var(--textPrimary);
+  box-shadow: -1px 1px 4px #0006;
+}
+
+.paginatorRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.paginator {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.paginator button {
+  min-height: 38px;
+  border-radius: 8px;
   box-shadow: unset;
-  text-decoration: underline;
-  border: 3px solid var(--linkText);
+  background-color: var(--buttonPrimary);
+  border: none;
+  padding: 0.4rem 0.6rem;
+  font-weight: 600;
+}
+
+.paginator button:disabled {
+  background-color: color-mix(in oklab, var(--buttonPrimary) 35%, transparent);
+  color: var(--textSecondary);
+}
+
+.paginator span {
+  justify-self: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+@media (min-width: 600px) {
+  .tableController {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+
+  .paginatorRow {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.8rem;
+    align-items: center;
+  }
 }
 
 ul.machineList {

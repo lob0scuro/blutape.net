@@ -5,7 +5,6 @@ from .delete import delete_bp
 from .read import read_bp
 from .update import update_bp
 from .export import export_bp
-from .labels import labels_bp
 from .print import print_bp
 
 
@@ -18,5 +17,4 @@ api_bp.register_blueprint(delete_bp, url_prefix="/delete")
 api_bp.register_blueprint(read_bp, url_prefix="/read")
 api_bp.register_blueprint(update_bp, url_prefix="/update")
 api_bp.register_blueprint(export_bp, url_prefix="/export")
-api_bp.register_blueprint(labels_bp, url_prefix="/labels")
 api_bp.register_blueprint(print_bp, url_prefix="/print")

@@ -1,5 +1,5 @@
 import styles from "./Search.module.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleInfo,
@@ -8,51 +8,65 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { brands, colors, machineStyles } from "../../utils/Schemas";
-import { TYPES } from "../../utils/Enums";
+import { brands } from "../../utils/Schemas";
+import { APPLIANCE_CATEGORIES, COLORS, FORM_FACTOR, STATUS } from "../../utils/Enums";
 import { Scanner } from "@yudiel/react-qr-scanner";
+import { requestJson } from "../../utils/api";
 
 const Search = () => {
   const [serialSearch, setSerialSearch] = useState(true);
   const [machine, setMachine] = useState(null);
   const [serial, setSerial] = useState("");
   const navigate = useNavigate();
+  const toggleSearchMode = (useSerialSearch) => {
+    setSerialSearch(useSerialSearch);
+    setMachine(null);
+    setSerial("");
+  };
+  const handleSerialChange = (value) => {
+    const next = value.toUpperCase();
+    if (!next.trim()) {
+      setMachine(null);
+    }
+    setSerial(next);
+  };
 
   useEffect(() => {
-    if (!serial) {
-      setMachine(null);
+    const normalizedSerial = serial.trim();
+    if (!normalizedSerial) {
       return;
     }
 
+    let isActive = true;
+
     const delayDebounce = setTimeout(async () => {
-      const response = await fetch(`/api/read/serial/${serial}`);
-      const data = await response.json();
+      try {
+        const data = await requestJson(
+          `/api/read/serial/${encodeURIComponent(normalizedSerial)}`,
+        );
 
-      if (!data.success) {
-        toast.error(data.message);
+        if (!isActive) return;
+
+        setMachine(data.machine);
+      } catch (error) {
+        console.error("[SERIAL SEARCH ERROR]: ", error);
+        toast.error("Failed to search serial number");
         setMachine(null);
-        return;
       }
+    }, 600);
 
-      setMachine(data.machine);
-    }, 1000); // wait 500ms after user stops typing
-
-    return () => clearTimeout(delayDebounce);
+    return () => {
+      isActive = false;
+      clearTimeout(delayDebounce);
+    };
   }, [serial]);
 
-  useEffect(() => {
-    setMachine(null);
-    setSerial("");
-  }, [serialSearch]);
-
-  const handleScan = (detetectedCodes) => {
-    if (!detetectedCodes || detetectedCodes.length === 0) return;
-
-    console.log(detetectedCodes[0].rawValue);
-    const value = detetectedCodes[0].rawValue;
+  const handleScan = (detectedCodes) => {
+    if (!detectedCodes || detectedCodes.length === 0) return;
+    const value = detectedCodes[0].rawValue;
     if (!value) return;
 
-    setSerial(value);
+    setSerial(value.trim());
   };
 
   return (
@@ -60,13 +74,13 @@ const Search = () => {
       <div className={styles.searchToggler}>
         <button
           className={serialSearch ? styles.activeButton : ""}
-          onClick={() => setSerialSearch(true)}
+          onClick={() => toggleSearchMode(true)}
         >
           <FontAwesomeIcon icon={faKeyboard} />
         </button>
         <button
           className={!serialSearch ? styles.activeButton : ""}
-          onClick={() => setSerialSearch(false)}
+          onClick={() => toggleSearchMode(false)}
         >
           <FontAwesomeIcon icon={faQrcode} />
         </button>
@@ -78,7 +92,7 @@ const Search = () => {
             type="text"
             name="serial"
             value={serial}
-            onChange={(e) => setSerial(e.target.value)}
+            onChange={(e) => handleSerialChange(e.target.value)}
           />
         </div>
       ) : (
@@ -97,14 +111,20 @@ const Search = () => {
         <div className={styles.machineFound}>
           <div>
             <h2>
-              {brands[machine.brand]} {TYPES[machine.type_of]}
+              {brands[machine.brand]} {APPLIANCE_CATEGORIES[machine.category]}
             </h2>
             <p>Model: {machine.model}</p>
             <p>Serial: {machine.serial}</p>
-            {/* <p>Color: {colors[machine.color]}</p> */}
-            <p>Style: {machine.style}</p>
+            <p>Color: {COLORS[machine.color] ?? machine.color}</p>
             <p>
-              <small>Status: {machine.status}</small>
+              Style:{" "}
+              {FORM_FACTOR(machine.category)[machine.form_factor] ??
+                machine.form_factor}
+            </p>
+            <p>
+              <small>
+                Status: {STATUS[machine.current_status] ?? machine.current_status}
+              </small>
             </p>
           </div>
           <FontAwesomeIcon

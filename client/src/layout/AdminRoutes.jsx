@@ -1,12 +1,19 @@
-import React from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const AdminRoutes = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
   if (loading) return <p>Loading...</p>;
-  if (!user.is_admin)
+
+  const restrictedAdminRoute =
+    location.pathname.startsWith("/admin/metrics") ||
+    location.pathname.startsWith("/admin/register");
+  const canAccessMetrics = user?.role === "admin";
+
+  if (restrictedAdminRoute && !canAccessMetrics)
     return (
       <>
         <h2>Admin Panel</h2>

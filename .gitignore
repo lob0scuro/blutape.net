@@ -26,3 +26,10 @@ notes.txt
 deploy.tar.gz
 
 deployServer.sh
+
+# Migration rehearsal artifacts
+server/migration_output/
+server/migration_output_legacy/
+server/migration_output_prod/
+server/migration_output_pipeline_test/
+server/backups/

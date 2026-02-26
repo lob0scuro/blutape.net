@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { ROLES } from "../../../utils/Enums";
+import { requestJson } from "../../../utils/api";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -13,7 +14,6 @@ const Register = () => {
     email: "",
     password1: "",
     password2: "",
-    is_admin: false,
   });
 
   const handleChange = (e) => {
@@ -25,22 +25,14 @@ const Register = () => {
   };
 
   const handleSubmit = async (e) => {
-    if (!confirm("Register new user?")) return;
     e.preventDefault();
+    if (!confirm("Register new user?")) return;
 
     try {
-      const response = await fetch("/api/auth/register", {
+      const data = await requestJson("/api/auth/register", {
         method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        body: formData,
       });
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error(data.message);
-      }
       toast.success(data.message);
       navigate("/login");
     } catch (error) {
@@ -51,20 +43,6 @@ const Register = () => {
   return (
     <>
       <form onSubmit={handleSubmit} className={styles.registrationForm}>
-        <div>
-          <label htmlFor="is_admin">
-            Admin{" "}
-            <input
-              type="checkbox"
-              name="is_admin"
-              id="is_admin"
-              checked={formData.is_admin}
-              onChange={(e) =>
-                setFormData({ ...formData, is_admin: e.target.checked })
-              }
-            />
-          </label>
-        </div>
         <div>
           <label htmlFor="first_name">First Name</label>
           <input

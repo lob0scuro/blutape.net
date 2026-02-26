@@ -1,0 +1,60 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenClip, faRotateLeft } from "@fortawesome/free-solid-svg-icons";
+import styles from "./Card.module.css";
+import { formatDate } from "../../../utils/Tools";
+
+const MachineNotes = ({
+  editing,
+  setEditing,
+  noteContent,
+  setNoteContent,
+  handleSubmit,
+  notes,
+}) => {
+  return (
+    <div className={styles.notesBlock}>
+      <h3>
+        Notes{" "}
+        <button
+          onClick={() =>
+            setEditing({ ...editing, notes: !editing.notes, machine: false })
+          }
+          type="button"
+        >
+          <FontAwesomeIcon icon={editing.notes ? faRotateLeft : faPenClip} />
+        </button>
+      </h3>
+      <ul>
+        {editing.notes && (
+          <li className={styles.addNote}>
+            <form onSubmit={handleSubmit}>
+              <textarea
+                name="note"
+                value={noteContent}
+                onChange={(e) => setNoteContent(e.target.value)}
+                autoFocus
+              ></textarea>
+              <button type="submit">Submit</button>
+            </form>
+          </li>
+        )}
+        {notes
+          ?.slice()
+          .reverse()
+          .map(({ id, content, added_on, technician, machine_id }) => (
+            <li key={id}>
+              <p>{content}</p>
+              <div>
+                <p>
+                  {technician.first_name} {technician.last_name[0]}.
+                </p>
+                <p>{formatDate(added_on)}</p>
+              </div>
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
+};
+
+export default MachineNotes;
